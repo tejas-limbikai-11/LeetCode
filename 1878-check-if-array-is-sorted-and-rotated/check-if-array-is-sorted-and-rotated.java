@@ -14,11 +14,11 @@ class Solution {
         else if(count > 1){
             return false;
         } 
-        else {if(nums[0] >= nums[nums.length -1]){
+        else if(nums[0] >= nums[nums.length -1]){
             return true;
         } 
         else{
             return false;
-        }}
+        }
    }
 }
