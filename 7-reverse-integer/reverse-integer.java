@@ -1,17 +1,24 @@
 class Solution {
     public int reverse(int x) {
-        long reverse = 0;
+        int num = Math.abs(x);
 
-        while(Math.abs(x)>0){
-            int lastDigit = x % 10;
-            reverse = (reverse * 10) + lastDigit;
-            x = x/10;
-            if(reverse > Integer.MAX_VALUE || reverse < Integer.MIN_VALUE) {
+        int reverse = 0;
+
+        while(num != 0){
+            int lastDigit = num % 10;
+
+            if(reverse > (Integer.MAX_VALUE - lastDigit)/10) {
                 return 0;
             }
+
+            reverse = (reverse * 10) + lastDigit;
+            num = num/10;
         }
 
+        if(x<0) {
+            return (-reverse);
+        }
 
-        return (int)reverse;
+        return reverse;
     }
 }
