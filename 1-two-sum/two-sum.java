@@ -1,17 +1,40 @@
 class Solution {
     public int[] twoSum(int[] nums, int target) {
-        int[] ans = new int[2];
-        int j=1;
-        while(j<nums.length){
-            for(int i=0; i+j<nums.length; i++){
-                if(nums[i] + nums[i+j] == target){
-                    ans[0] = i;
-                    ans[1] = i+j; 
-                    return ans;
-                }
+        int copyNums[] = Arrays.copyOf(nums, nums.length);
+        Arrays.sort(copyNums);
+        int left = 0;
+        int right = copyNums.length-1;
+        int indices[] = new int[2];
+
+        while(left<right) {
+            int sum = copyNums[left] + copyNums[right];
+            if(sum == target) {
+                indices[0] = left;
+                indices[1] = right;
+                break;
+            } 
+            else if(sum < target) {
+                left++;
+            } 
+            else{
+                right--;
             }
-            j++;
         }
-        return ans;
+
+        for(int i=0; i<nums.length; i++) {
+            if(copyNums[indices[0]] == nums[i]) {
+                indices[0] = i;
+                break;
+            }
+        }
+
+        for(int i=nums.length-1; i>=0; i--) {
+            if(copyNums[indices[1]] == nums[i]) {
+                indices[1] = i;
+                break;
+            }
+        }
+
+        return indices;
     }
 }
