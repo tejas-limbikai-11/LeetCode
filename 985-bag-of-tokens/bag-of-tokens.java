@@ -14,7 +14,7 @@ class Solution {
             else if(tokens[left]>power && score >= 1){
                 if(left == right) break;
                 power = power + tokens[right];
-                if(score>=1) score--;
+                score--;
                 right--;
             } 
             else{
