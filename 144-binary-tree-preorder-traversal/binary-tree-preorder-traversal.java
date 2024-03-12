@@ -16,13 +16,17 @@
 class Solution {
     public List<Integer> preorderTraversal(TreeNode root) {
         ArrayList<Integer> list = new ArrayList<Integer>();
-        preorderTraverse(root, list);
+        Stack<TreeNode> s = new Stack<>();
+            if(root == null) return list;
+            TreeNode node = root;
+            s.push(node);
+
+            while(!s.isEmpty()) {
+                node = s.pop();
+                list.add(node.val);
+                if(node.right != null) s.push(node.right);
+                if(node.left != null) s.push(node.left);
+            }
         return list;
-    }
-    public void preorderTraverse(TreeNode root, ArrayList<Integer> list) {
-        if(root == null) return;
-        list.add(root.val);
-        preorderTraverse(root.left, list);
-        preorderTraverse(root.right, list);
     }
 }
