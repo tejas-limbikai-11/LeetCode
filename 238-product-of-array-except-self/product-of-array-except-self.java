@@ -1,0 +1,28 @@
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int product = 1;
+        int count = 0;
+        int arr[] = new int[nums.length];
+        for(int i=0; i<nums.length; i++) {
+            if(nums[i] == 0) {
+                count++;
+                continue;
+            }
+            product *= nums[i];
+        }
+        System.out.println(product);
+        for(int i=0; i<nums.length; i++) {
+            if(nums[i] == 0 && count == 1) {
+                arr = new int[nums.length];
+                arr[i] = product;
+                break;
+            }
+            else if(nums[i] == 0 && count > 1) {
+                arr = new int[nums.length];
+                break;
+            } 
+            else arr[i] = product / nums[i];
+        }
+        return arr;
+    }
+}
