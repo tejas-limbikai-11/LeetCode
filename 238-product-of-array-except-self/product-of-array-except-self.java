@@ -1,28 +1,28 @@
 class Solution {
     public int[] productExceptSelf(int[] nums) {
         int product = 1;
-        int count = 0;
-        int arr[] = new int[nums.length];
+        int leftProduct[] = new int[nums.length];
+        int rightProduct[] = new int[nums.length];
+        int ans[] = new int[nums.length];
+
         for(int i=0; i<nums.length; i++) {
-            if(nums[i] == 0) {
-                count++;
-                continue;
-            }
             product *= nums[i];
+            leftProduct[i] = product;
         }
-        System.out.println(product);
-        for(int i=0; i<nums.length; i++) {
-            if(nums[i] == 0 && count == 1) {
-                arr = new int[nums.length];
-                arr[i] = product;
-                break;
-            }
-            else if(nums[i] == 0 && count > 1) {
-                arr = new int[nums.length];
-                break;
-            } 
-            else arr[i] = product / nums[i];
+        product = 1;
+        
+        for(int i=nums.length-1; i>=0; i--) {
+            product *= nums[i];
+            rightProduct[i] = product;
         }
-        return arr;
+
+        ans[0] =  rightProduct[1];
+        ans[nums.length-1] =  leftProduct[nums.length-2];
+
+        for(int i=1; i<nums.length-1; i++) {
+            ans[i] = leftProduct[i-1] * rightProduct[i+1];
+        }
+
+        return ans;
     }
 }
