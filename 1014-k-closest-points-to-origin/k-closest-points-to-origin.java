@@ -10,6 +10,11 @@ class Solution {
             if(pq.size() > k) pq.poll();
         }
          
-        return pq.toArray(new int[k][2]);
+        int[][] closestPoints = new int[k][];
+        while(k > 0) {
+            closestPoints[k-1] = pq.poll();
+            k--;
+        }
+        return closestPoints;
     }
 }
