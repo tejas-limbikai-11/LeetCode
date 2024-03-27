@@ -1,19 +1,23 @@
 class Solution {
     public boolean isAnagram(String s, String t) {
-        if(s.length() != t.length()) return false;
-        HashMap<Character, Integer> map = new HashMap<>();
+        int Frequency[] = new int[26];
 
-        for(int i=0; i<s.length(); i++) {
-            map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0) + 1) ;
+        // Frequency of characters in String s (increment frequency array)
+        for(int i=0; i<s.length(); i++){
+            char ch = s.charAt(i);
+            Frequency[ch - 'a']++;
         }
 
-        for(int i=0; i<t.length(); i++) {
-            if(map.get(t.charAt(i)) != null) {
-                if(map.get(t.charAt(i)) == 1) map.remove(t.charAt(i));
-                else map.put(t.charAt(i), map.get(t.charAt(i)) - 1);
-            }
-            else return false;
+        // Frequency of characters in String t (decrement frequency array)
+        for(int i=0; i<t.length(); i++){
+            char ch = t.charAt(i);
+            Frequency[ch - 'a']--;
         }
-        return map.isEmpty();
+
+        //comparison (check if every element is 0)
+        for(int i=0; i<26; i++){
+            if(Frequency[i] != 0)return false;
+        }
+        return true;
     }
 }
