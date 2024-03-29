@@ -1,22 +1,21 @@
 class Solution {
     public long countSubarrays(int[] nums, int k) {
         int n = nums.length;
-        int left = 0, right = 0;
-        int countMax = 0;
         long result = 0;
 
         int maxElement = 0;
         for(int i: nums) maxElement = Math.max(maxElement, i);
 
-        while(right < n) {
-            if(nums[right] == maxElement) countMax++;
+        ArrayList<Integer> maxIndices = new ArrayList<>();
+        for(int i=0; i<nums.length; i++) {
+            if(nums[i] == maxElement) maxIndices.add(i);
 
-            while(countMax >= k) {
-                result += n - right;
-                if(nums[left] == maxElement) countMax--;
-                left++;
+            int size = maxIndices.size();
+
+            if(size >= k) {
+                int lastIndex = maxIndices.get(size - k);  //last index at which max element was found which makes subarray valid 
+                result += (lastIndex + 1);
             }
-            right++;
         }
         return result;
     }
