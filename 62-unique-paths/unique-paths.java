@@ -1,12 +1,32 @@
 class Solution {
     public int uniquePaths(int m, int n) {
-        int N = m+n-2;
-        int r = m-1;
-        double res = 1;
+        int dp[][] = new int[n][m];
+        for(int d[]: dp) {
+            Arrays.fill(d, -1);
+        }
 
-        for(int i=1; i<=r; i++) {
-            res = res * (N - r + i) / i;    //Ncr (combination)
-        }       
-        return (int)res;
+        return uniquePathsMemoization(0, 0, n, m, dp);
+    }
+
+    public static int uniquePathsMemoization(int i, int j, int n, int m, int dp[][]) {
+        if(i == n-1 && j == m-1) return dp[i][j] = 1;
+
+        int downPaths = 0;
+        int rightPaths = 0;
+
+        if(dp[i][j] != -1) {
+            return dp[i][j];
+        }
+
+        if(i+1 < n) {
+            downPaths = uniquePathsMemoization(i+1, j, n, m, dp);
+        }
+
+        if(j+1 < m) {
+            rightPaths = uniquePathsMemoization(i, j+1, n, m, dp);
+        }
+
+        int totalPaths = rightPaths + downPaths;
+        return dp[i][j] = totalPaths;
     }
 }
