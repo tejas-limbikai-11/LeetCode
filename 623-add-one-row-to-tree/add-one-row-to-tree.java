@@ -21,10 +21,10 @@ class Solution {
             return newRoot;
         }
         int curr = 1;
-        return add(root, val, depth, curr);
+        return DFS(root, val, depth, curr);
     }
 
-    public TreeNode add(TreeNode root, int val, int depth, int curr) {
+    public TreeNode DFS(TreeNode root, int val, int depth, int curr) {
         if(root == null) return null;
         if(curr == depth - 1) {
             TreeNode tempLeft = root.left;
@@ -37,8 +37,8 @@ class Solution {
 
             return root;
         }
-        root.left = add(root.left, val, depth, curr + 1);
-        root.right = add(root.right, val, depth, curr + 1);
+        root.left = DFS(root.left, val, depth, curr + 1);
+        root.right = DFS(root.right, val, depth, curr + 1);
         
         return root;
     }
