@@ -13,24 +13,28 @@
  *     }
  * }
  */
+
 class Solution {
+    private String result = "";
+
     public String smallestFromLeaf(TreeNode root) {
-        return helper(root, "");
+        dfs(root, "");
+        return result;
     }
 
-    public String helper(TreeNode root, String str) {
-        if(root == null) return str;
+    private void dfs(TreeNode root, String curr) {
+        if (root == null) return;
 
-        str = (char)('a' + root.val) + str; 
-        if(root.left != null && root.right != null) {
-            String left = helper(root.left, str);
-            String right = helper(root.right, str);
-            if(left.compareTo(right) < 0) return left;
-            else return right;
+        curr = (char)(root.val + 'a') + curr;
+        if (root.left == null && root.right == null) {
+            if (result.isEmpty() || result.compareTo(curr) > 0) {
+                result = curr;
+            }
+            return;
         }
-        if(root.left == null) return helper(root.right, str);
-        if(root.right == null) return helper(root.left, str);
-        
-        return str;
+
+        dfs(root.left, curr);
+        dfs(root.right, curr);
     }
 }
+
