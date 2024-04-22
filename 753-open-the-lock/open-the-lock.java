@@ -1,32 +1,48 @@
 class Solution {
     public int openLock(String[] deadends, String target) {
-        Set<String> begin = new HashSet<>();
-        Set<String> end = new HashSet<>();
-        Set<String> deads = new HashSet<>(Arrays.asList(deadends));
-        begin.add("0000");
-        end.add(target);
+        Set<String> set = new HashSet<>(Arrays.asList(deadends));
+        String start = "0000";
+        if (set.contains(start)) return -1;
+
+        Queue<String> queue = new LinkedList<>();
+        queue.offer(start);
         int level = 0;
-        while(!begin.isEmpty() && !end.isEmpty()) {
-            Set<String> temp = new HashSet<>();
-            for(String s : begin) {
-                if(end.contains(s)) return level;
-                if(deads.contains(s)) continue;
-                deads.add(s);
-                StringBuilder sb = new StringBuilder(s);
-                for(int i = 0; i < 4; i ++) {
-                    char c = sb.charAt(i);
-                    String s1 = sb.substring(0, i) + (c == '9' ? 0 : c - '0' + 1) + sb.substring(i + 1);
-                    String s2 = sb.substring(0, i) + (c == '0' ? 9 : c - '0' - 1) + sb.substring(i + 1);
-                    if(!deads.contains(s1))
-                        temp.add(s1);
-                    if(!deads.contains(s2))
-                        temp.add(s2);
-                }
+
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            while(size -- > 0) {
+                String curr = queue.poll();
+                
+                if(curr.equals(target)) return level;
+
+                fillNeighbours(queue, new StringBuilder(curr), set);
             }
-            level ++;
-            begin = end;
-            end = temp;
+            level++;
         }
         return -1;
+    }
+
+    public void fillNeighbours(Queue<String> queue, StringBuilder curr, Set<String> set) {
+        for(int i=0; i<4; i++) {
+            char ch = curr.charAt(i);
+            char inc = ch == '9' ? '0' : (char) (ch + 1);
+            char dec = ch == '0' ? '9' : (char) (ch - 1);
+
+            curr.setCharAt(i, inc);
+            String incStr = curr.toString();
+            if(!set.contains(incStr)) {
+                set.add(incStr);
+                queue.offer(incStr);
+            }
+
+            curr.setCharAt(i, dec);
+            String decStr = curr.toString();
+            if(!set.contains(decStr)) {
+                set.add(decStr);
+                queue.offer(decStr);
+            }
+
+            curr.setCharAt(i, ch);
+        }
     }
 }
