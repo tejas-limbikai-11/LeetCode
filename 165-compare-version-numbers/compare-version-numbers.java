@@ -21,10 +21,10 @@ class Solution {
     }
 
     public List<String> getTokens(String version) {
-        StringTokenizer tokenizer = new StringTokenizer(version, ".");
+        String splitTokens[] = version.split("\\.");
         List<String> tokens = new ArrayList<>();
-        while(tokenizer.hasMoreTokens()) {
-            tokens.add(tokenizer.nextToken());
+        for(String splitToken: splitTokens) {
+            tokens.add(splitToken);
         }
         return tokens;
     }
