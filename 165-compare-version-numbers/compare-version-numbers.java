@@ -1,5 +1,3 @@
-import java.util.StringTokenizer;
-
 class Solution {
     public int compareVersion(String version1, String version2) {
         List<String> v1 = getTokens(version1);
