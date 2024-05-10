@@ -1,19 +1,24 @@
 class Solution {
-    public int doubleUtil(ListNode head) {
-        if(head == null) return 0;
-        int carry = doubleUtil(head.next);
-        int newVal = head.val * 2 + carry;
-        head.val = newVal % 10;
-        return newVal / 10;
-    }
-
     public ListNode doubleIt(ListNode head) {     
-        int lastCarry = doubleUtil(head);
+        ListNode curr = head;
+        ListNode prev = null;
 
-        if(lastCarry > 0) {
-            ListNode newHead = new ListNode(lastCarry);
-            newHead.next = head;
-            return newHead;
+        while(curr != null) {
+            int newVal = curr.val * 2;
+
+            if(newVal < 10) {
+                curr.val = newVal;
+            } else if(prev != null) {
+                curr.val = newVal % 10;
+                prev.val += 1;
+            } else {
+                ListNode newHead = new ListNode(1);
+                newHead.next = curr;
+                curr.val = newVal % 10;
+                head = newHead;
+            }
+            prev = curr;
+            curr = curr.next;
         }
         return head;
     }
