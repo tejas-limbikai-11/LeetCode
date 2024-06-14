@@ -1,43 +1,36 @@
 class Solution {
     public int[] searchRange(int[] nums, int target) {
-        int n = nums.length;
-        int lb = lowerBound(nums, target);
-        int ub = upperBound(nums, target);
-        if(lb == n || nums[lb] != target) return new int[]{-1, -1};
-        return new int[]{lb, ub - 1};
-    }
-
-    public int lowerBound(int arr[], int x)
-    {
-        int left = 0;
-        int right = arr.length-1;
-        int ans = arr.length;
-        
-        while(left <= right) {
+       int left = 0;
+       int right = nums.length-1;
+       int first = -1;
+       
+       while(left <= right) {
             int mid = left + (right - left) / 2;
-            if(arr[mid] >= x) {
-                ans = mid;
+            if(nums[mid] == target) {
+                first = mid;
                 right = mid-1;
-            }
-            else left = mid+1;
-        }
-        return ans;
-    }
+            } 
+            else if(nums[mid] < target) {
+                left = mid+1;
+            } 
+            else right = mid-1;
+       }
 
-    public int upperBound(int arr[], int x)
-    {
-        int left = 0;
-        int right = arr.length-1;
-        int ans = arr.length;
-        
-        while(left <= right) {
+       left = 0;
+       right = nums.length-1;
+       int last = -1;
+
+       while(left <= right) {
             int mid = left + (right - left) / 2;
-            if(arr[mid] > x) {
-                ans = mid;
-                right = mid-1;
-            }
-            else left = mid+1;
-        }
-        return ans;
+            if(nums[mid] == target) {
+                last = mid;
+                left = mid+1;
+            } 
+            else if(nums[mid] < target) {
+                left = mid+1;
+            } 
+            else right = mid-1;
+       }
+       return new int[]{first, last};
     }
 }
