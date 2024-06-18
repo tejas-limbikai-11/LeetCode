@@ -9,23 +9,16 @@ class Solution {
         }
 
         Collections.sort(list, (a,b) -> Integer.compare(a[0], b[0]));
-
-        for(int i=1; i<list.size(); i++) {
-            list.get(i)[1] = Math.max(list.get(i)[1], list.get(i-1)[1]);
-        }
-
+        Arrays.sort(worker);
+    
         int totalProfit = 0;
+        int j = 0;
+        int maxProfit = 0;
 
         for(int i=0; i<m; i++) {
-            int l = 0, r = list.size()-1;
-            int maxProfit = 0;
-            while(l <= r) {
-                int mid = l + (r - l) / 2;
-                if(list.get(mid)[0] <= worker[i]) {
-                    maxProfit = Math.max(maxProfit, list.get(mid)[1]);
-                    l = mid + 1;
-                } 
-                else r = mid - 1;
+            while(j < n && list.get(j)[0] <= worker[i]) {
+                maxProfit = Math.max(maxProfit, list.get(j)[1]);
+                j++;
             }
             totalProfit += maxProfit;
         }
