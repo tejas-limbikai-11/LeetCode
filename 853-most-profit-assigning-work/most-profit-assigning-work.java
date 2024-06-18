@@ -3,32 +3,32 @@ class Solution {
         int n = difficulty.length;
         int m = worker.length;
 
-        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> b[0] - a[0]);
-
+        ArrayList<int[]> list = new ArrayList<>();
         for(int i=0; i<n; i++) {
-            int prof = profit[i];
-            int diff = difficulty[i];
-            pq.offer(new int[]{prof, diff});
+            list.add(new int[]{difficulty[i], profit[i]});
         }
 
-        //sort worker array in descending order
-        Arrays.sort(worker);
-        for(int i=0; i<m/2; i++) {
-            int temp = worker[i];
-            worker[i] = worker[m-1-i];
-            worker[m-1-i] = temp;
+        Collections.sort(list, (a,b) -> Integer.compare(a[0], b[0]));
+
+        for(int i=1; i<list.size(); i++) {
+            list.get(i)[1] = Math.max(list.get(i)[1], list.get(i-1)[1]);
         }
 
-        int i = 0;
-        int maxProfit = 0;
-        while(i < m && !pq.isEmpty()) {
-            if(pq.peek()[1] > worker[i]) {
-                pq.poll();
-            } else {
-                maxProfit += pq.peek()[0];
-                i++;
+        int totalProfit = 0;
+
+        for(int i=0; i<m; i++) {
+            int l = 0, r = list.size()-1;
+            int maxProfit = 0;
+            while(l <= r) {
+                int mid = l + (r - l) / 2;
+                if(list.get(mid)[0] <= worker[i]) {
+                    maxProfit = Math.max(maxProfit, list.get(mid)[1]);
+                    l = mid + 1;
+                } 
+                else r = mid - 1;
             }
+            totalProfit += maxProfit;
         }
-        return maxProfit;
+        return totalProfit;
     }
 }
