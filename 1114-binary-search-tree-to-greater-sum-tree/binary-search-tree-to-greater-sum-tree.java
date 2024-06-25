@@ -15,16 +15,36 @@
  */
 class Solution {
     public TreeNode bstToGst(TreeNode root) {
-        int sum[] = new int[1];
-        solve(root, sum);
+        morrisInorderTraversal(root);
         return root;
     }
 
-    public void solve(TreeNode root, int sum[]) {
-        if(root == null) return;
-        solve(root.right, sum);
-        sum[0] += root.val;
-        root.val = sum[0];
-        solve(root.left, sum);
+    public void morrisInorderTraversal(TreeNode root) {
+        int sum = 0;
+        TreeNode curr = root;
+        while(curr != null) {
+            if(curr.right == null) {
+                sum += curr.val;
+                curr.val = sum;
+                curr = curr.left;
+            }
+            else {
+                TreeNode prev = curr.right;
+                while(prev.left != null && prev.left != curr) {
+                    prev = prev.left;
+                }
+
+                if(prev.left == null) {
+                    prev.left = curr;
+                    curr = curr.right;
+                }
+                else {
+                    prev.left = null;
+                    sum += curr.val;
+                    curr.val = sum;
+                    curr = curr.left;
+                }
+            }
+        }
     }
 }
