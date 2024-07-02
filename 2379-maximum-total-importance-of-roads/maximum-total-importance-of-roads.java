@@ -1,17 +1,24 @@
 class Solution {
-  public long maximumImportance(int n, int[][] roads) {
-    var degrees = new long[n];
-    var sum = 0L;
+    public long maximumImportance(int n, int[][] roads) {
+        int degree[] = new int[n];
 
-    for (var road : roads) {
-      degrees[road[0]]++;
-      degrees[road[1]]++;
+        for(int[] road: roads) {
+            int u = road[0];
+            int v = road[1];
+
+            degree[u]++;
+            degree[v]++;
+        }
+
+        Arrays.sort(degree);
+
+        long value = 1;
+        long sum = 0;
+
+        for(int i=0; i<n; i++) {
+            sum += (degree[i] * value);
+            value++;
+        }
+        return sum;
     }
-    Arrays.sort(degrees);
-
-    for (var i=0; i<n; i++)
-      sum += degrees[i] * (i+1);
-
-    return sum;
-  }
 }
