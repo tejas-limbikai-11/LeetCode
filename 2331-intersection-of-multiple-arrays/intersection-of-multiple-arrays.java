@@ -1,18 +1,17 @@
 class Solution {
     public List<Integer> intersection(int[][] nums) {
         List<Integer> list = new ArrayList<>();
-        HashMap<Integer, Integer> map = new HashMap<>();
+        int[] count = new int[1001];
         for(int arr[]: nums) {
             for(int num: arr) {
-                map.put(num, map.getOrDefault(num, 0) + 1);
+                count[num]++;
             }
         } 
-        for(int key: map.keySet()) {
-            if(map.get(key) == nums.length) {
-                list.add(key);
+        for(int i=0; i<count.length; i++) {
+            if(count[i] == nums.length) {
+                list.add(i);
             }
         }
-        Collections.sort(list);
         return list;
     }
 }
