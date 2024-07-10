@@ -1,9 +1,8 @@
 class Solution {
     public char findTheDifference(String s, String t) {
-        char tArray[] = t.toCharArray();
-        for(int i=0; i<s.length(); i++) {
-            tArray[i+1] += tArray[i] - s.charAt(i);
-        }
-        return tArray[t.length() - 1];
+        char c = 0;
+        for(char cs: s.toCharArray()) c ^= cs;
+        for(char ct: t.toCharArray()) c ^= ct;
+        return c;
     }
 }
