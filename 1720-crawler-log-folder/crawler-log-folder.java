@@ -1,11 +1,15 @@
 class Solution {
     public int minOperations(String[] logs) {
-        int ans = 0;
+        Stack<String> stack = new Stack<>();
+
         for(String log: logs) {
-            if(log.equals("../")) ans = Math.max(0, --ans);
-            else if(log.equals("./")) continue;
-            else ans++;
+            if(log.equals("./")) continue;
+            
+            if(log.equals("../")) {
+                if(!stack.isEmpty()) stack.pop();
+            }
+            else stack.push(log);
         }
-        return ans;
+        return stack.size();
     }
 }
