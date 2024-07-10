@@ -1,13 +1,9 @@
 class Solution {
     public char findTheDifference(String s, String t) {
-        int sumS = 0, sumT = 0;
-        
-        for(int i=0; i<t.length(); i++) {
-            sumT += t.charAt(i);
-        }
+        char tArray[] = t.toCharArray();
         for(int i=0; i<s.length(); i++) {
-            sumS += s.charAt(i);
+            tArray[i+1] += tArray[i] - s.charAt(i);
         }
-        return (char)(sumT - sumS);
+        return tArray[t.length() - 1];
     }
 }
