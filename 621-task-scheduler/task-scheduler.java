@@ -1,25 +1,37 @@
 class Solution {
     public int leastInterval(char[] tasks, int n) {
-        int[] counter = new int[26];
-        int max = 0;
-        int maxCount = 0;
-        for(char task : tasks) {
-            counter[task - 'A']++;
-            if(max == counter[task - 'A']) {
-                maxCount++;
+        int[] freq = new int[26];
+        for(char ch: tasks) {
+            freq[ch - 'A']++;
+        }
+
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+
+        for(int i=0; i<26; i++) {
+            if(freq[i] > 0) pq.offer(freq[i]);
+        }
+
+        int time = 0;
+
+        while(!pq.isEmpty()) {
+            int cycle = n + 1;
+            List<Integer> store = new ArrayList<>();
+            int taskCount = 0;
+
+            while(cycle > 0 && !pq.isEmpty()) {
+                int currFreq = pq.poll();
+                if(currFreq > 1) store.add(currFreq - 1);
+                taskCount++;
+                cycle--;
             }
-            else if(max < counter[task - 'A']) {
-                max = counter[task - 'A'];
-                maxCount = 1;
+            store.forEach(pq::offer);
+
+            if(pq.isEmpty()) {
+                time += taskCount;
+            } else {
+                time += (n + 1);
             }
         }
-        
-        int partCount = max - 1;
-        int partLength = n - (maxCount - 1);
-        int emptySlots = partCount * partLength;
-        int availableTasks = tasks.length - max * maxCount;
-        int idles = Math.max(0, emptySlots - availableTasks);
-        
-        return tasks.length + idles;
+        return time;
     }
 }
