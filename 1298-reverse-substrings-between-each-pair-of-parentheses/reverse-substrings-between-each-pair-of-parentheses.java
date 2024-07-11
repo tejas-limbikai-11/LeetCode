@@ -1,28 +1,32 @@
 class Solution {
     public String reverseParentheses(String s) {
-        Stack<Integer> stack = new Stack<>();
-        StringBuilder result = new StringBuilder();
+        int n = s.length();
+        Stack<Integer> stack = new Stack<>();  //to store open bracket indexes
+        int[] door = new int[n];   //mapping of open bracket to closed bracket
 
-        for(char ch: s.toCharArray()) {
-            if(ch == '(') {
-                stack.push(result.length());
-            } 
-            else if(ch == ')') {
-                int start = stack.pop();
-                reverse(result, start, result.length() - 1);
+        for(int i=0; i<n; i++) {
+            if(s.charAt(i) == '(') {
+                stack.push(i);
+            }
+            else if(s.charAt(i) == ')') {
+                int j = stack.pop();
+                door[i] = j;
+                door[j] = i;
+            }
+        }
+
+        StringBuilder result = new StringBuilder();
+        int direction = 1;
+
+        for(int i = 0; i < n; i += direction) {
+            if(s.charAt(i) == '(' || s.charAt(i) == ')') {
+                i = door[i];
+                direction = -direction;
             } else {
-                result.append(ch);
+                result.append(s.charAt(i));
             }
         }
 
         return result.toString();
-    }
-
-    public void reverse(StringBuilder sb, int start, int end) {
-        while(start < end) {
-            char temp = sb.charAt(start);
-            sb.setCharAt(start++, sb.charAt(end));
-            sb.setCharAt(end--, temp);
-        }
     }
 }
