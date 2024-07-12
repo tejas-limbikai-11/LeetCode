@@ -1,37 +1,35 @@
 class Solution {
     public int maximumGain(String s, int x, int y) {
         int score = 0;
-
-        String maxStr = (x > y) ? "ab" : "ba";
-        String minStr = (x < y) ? "ab" : "ba";
-        int maxScore = Math.max(x, y);
+        int countA = 0;
+        int countB = 0;
         int minScore = Math.min(x, y);
 
-        String tempFirst = removeSubstring(s, maxStr);
-        int removedPairsCount = (s.length() - tempFirst.length()) / 2;
-        score += removedPairsCount * maxScore;
+        for(int i=0; i<s.length(); i++) {
+            char ch = s.charAt(i);
 
-        String tempSecond = removeSubstring(tempFirst, minStr);
-        removedPairsCount = (tempFirst.length() - tempSecond.length())/2;
-        score += removedPairsCount * minScore;
+            if(ch == 'a') {
+                if(x < y && countB > 0) {
+                    score += y;
+                    countB--;
+                } 
+                else countA++;
+            }
+            else if(ch == 'b') {
+                if(x > y && countA > 0) {
+                    score += x;
+                    countA--;
+                }
+                else countB++;
+            }
+            else{
+                score += Math.min(countA, countB) * minScore;
+                countA = 0;
+                countB = 0;
+            } 
+        }
+        score += Math.min(countA, countB) * minScore;
 
         return score;
-    }
-
-    public String removeSubstring(String inputStr, String matchStr) {
-        StringBuilder sb = new StringBuilder();
-        int j = 0;
-
-        for(int i=0; i<inputStr.length(); i++) {
-            sb.append(inputStr.charAt(i));
-            j++;
-
-            if(j >= 2 && sb.charAt(j - 2) == matchStr.charAt(0) && sb.charAt(j - 1) == matchStr.charAt(1)) {
-                sb.delete(j-2, j);
-                j -= 2;
-            }
-        }
-
-        return sb.toString();
     }
 }
