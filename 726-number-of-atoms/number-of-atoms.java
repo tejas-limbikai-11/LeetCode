@@ -1,51 +1,69 @@
 class Solution {
-    Map<String, Integer> res = new TreeMap<>();
-    Stack<Integer> stack = new Stack<>();
-    int multiplier = 1;
-    
     public String countOfAtoms(String formula) {
-        int end = formula.length() - 1, i = formula.length() - 1;
-        
-        while (i >= 0) {
-            if (formula.charAt(i) == '(') {
-                multiplier /= stack.pop();
-                i--;
-                continue;
+        int n = formula.length();
+
+        Stack<Map<String, Integer>> stack = new Stack<>();
+        stack.push(new HashMap<>());
+
+        int i = 0;
+        while(i < n) {
+            if(formula.charAt(i) == '(') {
+                stack.push(new HashMap<>());
+                i++;
             }
-            
-            end = i;
-            int val = 1;
-            
-            if (Character.isDigit(formula.charAt(i))) {
-                while (Character.isDigit(formula.charAt(i))) i--;
-                val = Integer.parseInt(formula.substring(i+1, end+1));
-            } 
-            stack.push(val);
-            multiplier *= val;
-            
-            end = i;
-            if (Character.isLetter(formula.charAt(i))) {
-                while(Character.isLowerCase(formula.charAt(i))) i--;
-                updateMap(formula.substring(i, end+1));
+            else if(formula.charAt(i) == ')') {
+                Map<String, Integer> top = stack.pop();
+                i++;
+
+                StringBuilder sb = new StringBuilder();
+                while(i < n && Character.isDigit(formula.charAt(i))) {
+                    sb.append(formula.charAt(i));
+                    i++;
+                }
+
+                int multiplier = sb.length() > 0 ? Integer.parseInt(sb.toString()) : 1;
+                for(String key: top.keySet()) {
+                    int value = top.get(key);
+                    top.put(key, value * multiplier);
+                }
+
+                // Merging
+                for(String key: top.keySet()) {
+                    Map<String, Integer> oldMap = stack.peek();
+                    oldMap.put(key, oldMap.getOrDefault(key, 0) + top.get(key));
+                }
             }
-            i--;
-        }
-        
-        StringBuilder rs = new StringBuilder();
-        for (Map.Entry<String, Integer> entry : res.entrySet()) {
-            rs.append(entry.getKey());
-            if (entry.getValue() > 1) rs.append(entry.getValue());
-        }
-        return rs.toString();
-    }
-    
-    private void updateMap(String key) {
-        if (res.get(key) == null) {
-            res.put(key, multiplier);
-        } else {
-            res.put(key, multiplier + res.get(key));
+            else {
+                StringBuilder element = new StringBuilder();
+                element.append(formula.charAt(i));
+                i++;
+
+                while(i<n && Character.isLowerCase(formula.charAt(i))) {
+                    element.append(formula.charAt(i));
+                    i++;
+                }
+
+                StringBuilder num = new StringBuilder();
+                while(i < n && Character.isDigit(formula.charAt(i))) {
+                    num.append(formula.charAt(i));
+                    i++;
+                }
+
+                int count = num.length() > 0 ? Integer.parseInt(num.toString()) : 1;
+                Map<String, Integer> oldMap = stack.peek();
+                oldMap.put(element.toString(), oldMap.getOrDefault(element.toString(), 0) + count);
+            }   
         }
 
-        multiplier /= stack.pop();
+        //Only one map is left in stack
+        TreeMap<String, Integer> sortedMap = new TreeMap<>(stack.peek());
+        StringBuilder result = new StringBuilder();
+
+        for(String key: sortedMap.keySet()) {
+            result.append(key);
+            int count = sortedMap.get(key);
+            if(count > 1) result.append(count); 
+        }
+        return result.toString();
     }
 }
