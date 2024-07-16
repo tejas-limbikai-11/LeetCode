@@ -1,19 +1,25 @@
 class Solution {
     public String getDirections(TreeNode root, int startValue, int destValue) {
-        TreeNode LCA = lowestCommonAncestor(root, startValue, destValue);
+        StringBuilder rootToStart = new StringBuilder();
+        StringBuilder rootToDest = new StringBuilder();
 
-        StringBuilder lcaToStart = new StringBuilder();
-        StringBuilder lcaToDest = new StringBuilder();
+        findPath(root, startValue, rootToStart);
+        findPath(root, destValue, rootToDest);
 
-        findPath(LCA, startValue, lcaToStart);
-        findPath(LCA, destValue, lcaToDest);
-
+        int l = 0;
+        while(l < rootToStart.length() && l < rootToDest.length()
+        && rootToStart.charAt(l) == rootToDest.charAt(l)) {
+            l++;
+        }
+        
         StringBuilder result = new StringBuilder();
 
-        for(int i=0; i<lcaToStart.length(); i++) {
+        for(int i=0; i<rootToStart.length() - l; i++) {
             result.append('U');
         }
-        result.append(lcaToDest);
+        for(int i=l; i<rootToDest.length(); i++) {
+            result.append(rootToDest.charAt(i));
+        }
         return result.toString();
     }
 
@@ -30,17 +36,5 @@ class Solution {
         path.deleteCharAt(path.length() - 1);
 
         return false;
-    }
-
-    public TreeNode lowestCommonAncestor(TreeNode root, int p, int q) {
-        if(root == null || root.val == p || root.val == q) return root;
-
-        TreeNode leftLCA = lowestCommonAncestor(root.left, p, q);
-        TreeNode rightLCA = lowestCommonAncestor(root.right, p, q);
-
-        if(leftLCA == null) return rightLCA;
-        if(rightLCA == null) return leftLCA;
-
-        return root;
     }
 }
