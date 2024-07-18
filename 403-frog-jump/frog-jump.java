@@ -1,35 +1,20 @@
 class Solution {
     public boolean canCross(int[] stones) {
         int n = stones.length;
-        Map<Integer, Integer> map = new HashMap<>();
-        for(int i=0; i<n; i++) {
-            map.put(stones[i], i);
-        }
-        int dp[][] = new int[2001][2001];
+        boolean dp[][] = new boolean[n + 1][n + 1];
+        dp[0][1] = true;
 
-        for(int d[]: dp) Arrays.fill(d, -1);
-        return solve(stones, 0, 0, map, dp);
-    }
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                int jump = stones[i] - stones[j];
 
-    public boolean solve(int[] stones, int currStoneIdx, int prevJump, Map<Integer, Integer> map, int[][] dp) {
-        int n = stones.length;
-        if(currStoneIdx == n-1) return true;
-
-        if(dp[currStoneIdx][prevJump] != -1) {
-            return dp[currStoneIdx][prevJump] == 1;
-        }
-
-        boolean result = false;
-        for(int nextJump = prevJump-1; nextJump<=prevJump+1; nextJump++) {
-            if(nextJump > 0) {
-                int nextStone = stones[currStoneIdx] + nextJump;
-                
-                if(map.containsKey(nextStone)) {
-                    result = result || solve(stones, map.get(nextStone), nextJump, map, dp);
+                if (jump <= j + 1) {
+                    dp[i][jump] = dp[j][jump - 1] || dp[j][jump] || dp[j][jump + 1];
+                    if (i == n - 1 && dp[i][jump])
+                        return true;
                 }
             }
         }
-        dp[currStoneIdx][prevJump] = (result ? 1 : 0);
-        return result;
+        return false;
     }
 }
