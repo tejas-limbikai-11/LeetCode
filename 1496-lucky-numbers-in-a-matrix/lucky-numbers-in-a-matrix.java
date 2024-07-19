@@ -1,25 +1,36 @@
 class Solution {
     public List<Integer> luckyNumbers (int[][] matrix) {
-        int n = matrix.length;
-        int m = matrix[0].length;
-        List<Integer> result = new ArrayList<>();
+        int m = matrix.length;
+        int n = matrix[0].length;
 
-        for(int i=0; i<n; i++) {
-            for(int j=0; j<m; j++) {
-                int num = matrix[i][j];
-                int max = Integer.MIN_VALUE;
-                int min = Integer.MAX_VALUE;
-                for(int k=0; k<m; k++) {
-                    min = Math.min(min, matrix[i][k]);
-                }
-                for(int l=0; l<n; l++) {
-                    max = Math.max(max, matrix[l][j]);
-                }
-                if(num == min && num == max) {
-                    result.add(num);
+        List<Integer> rowMin = new ArrayList<>();
+        for(int row=0; row<m; row++) {
+            int min = Integer.MAX_VALUE;
+            for(int col=0; col<n; col++) {
+                min = Math.min(min, matrix[row][col]);
+            }
+            rowMin.add(min);
+        }
+
+        List<Integer> colMax = new ArrayList<>();
+        for(int col=0; col<n; col++) {
+            int max = Integer.MIN_VALUE;
+            for(int row=0; row<m; row++) {
+                max = Math.max(max, matrix[row][col]);
+            }
+            colMax.add(max);
+        }
+
+        List<Integer> result = new ArrayList<>();
+        for(int row=0; row<m; row++) {
+            for(int col=0; col<n; col++) {
+                if(matrix[row][col] == rowMin.get(row) 
+                && matrix[row][col] == colMax.get(col)) {
+                    result.add(matrix[row][col]);
                 }
             }
         }
+
         return result;
     }
 }
