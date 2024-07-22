@@ -31,7 +31,6 @@ class Solution {
             j++;
         }
 
-        sb.toString().trim();
         for (int i = 0; i < extraSpace; i++) {
             sb.append(' ');
         }
