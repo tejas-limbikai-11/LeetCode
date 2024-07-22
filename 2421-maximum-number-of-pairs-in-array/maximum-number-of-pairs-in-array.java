@@ -1,25 +1,15 @@
 class Solution {
     public int[] numberOfPairs(int[] nums) {
-        Map<Integer, Integer> map = new HashMap<>();
-        int pairs = 0;
-        int leftover = 0;
-
-        for(int num: nums) {
-            map.put(num, map.getOrDefault(num, 0) + 1);
+        int count[] = new int[101];
+        for(int i: nums) {
+            count[i]++;
         }
-        for(int key: map.keySet()) {
-            if(map.get(key) % 2 == 0) {
-                pairs += map.get(key) / 2;
-            }
-            else {
-                pairs += map.get(key) / 2;
-                leftover++;
-            }
-        }
+        int pairs = 0, leftover = 0;
 
-        int ans[] = new int[2];
-        ans[0] = pairs;
-        ans[1] = leftover;
-        return ans;
+        for(int i: count) {
+            pairs += i / 2;
+            leftover += i % 2;
+        }
+        return new int[] {pairs, leftover};
     }
 }
