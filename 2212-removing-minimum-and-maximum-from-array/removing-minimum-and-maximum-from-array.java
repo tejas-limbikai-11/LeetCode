@@ -19,10 +19,10 @@ class Solution {
             }
         }
 
-        int removeFront = (minIdx < maxIdx) ? maxIdx + 1 : minIdx + 1;
-        int removeBack = (minIdx < maxIdx) ? n - minIdx : n - maxIdx;
-        int removeSeparate = (minIdx < maxIdx) ? ((minIdx + 1) + (n - maxIdx)) : ((maxIdx + 1) + (n - minIdx));
-
+        int removeFront = Math.max(minIdx, maxIdx) + 1;
+        int removeBack = n- Math.min(minIdx, maxIdx);
+        int removeSeparate = (Math.min(minIdx, maxIdx) + 1) + (n - Math.max(minIdx, maxIdx));
+        
         return Math.min(removeSeparate, Math.min(removeFront, removeBack));
     }
 }
