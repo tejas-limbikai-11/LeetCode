@@ -1,30 +1,37 @@
 class Solution {
     public int[] findEvenNumbers(int[] digits) {
-        int n = digits.length;
-        Map<Integer, Integer> map = new HashMap<>();
+        int[] digitCount = new int[10];
+        for(int digit: digits) {
+            digitCount[digit]++;
+        }
+        List<Integer> evenNumbers = new ArrayList<>();
 
-        for(int i=0; i<n; i++) {
-            if(digits[i] == 0) continue;
-            int one = digits[i];
-            for(int j=0; j<n; j++) {
-                if(j == i) continue;
-                int two = digits[j];
-
-                for(int k=0; k<n; k++) {
-                    if(k == i || k == j) continue;
-                    int three = digits[k];
-                    int ans = one * 100 + two * 10 + three;
-                    if(ans % 2 == 0) map.put(ans, 1);
-                }
+        for(int i = 100; i < 999; i += 2) {
+            if(canBeFormed(i, digitCount)) {
+                evenNumbers.add(i);
             }
         }
-        int[] result = new int[map.size()];
-        int i = 0;
-        for(int key: map.keySet()) {
-            result[i] = key;
-            i++;
+        int[] result = new int[evenNumbers.size()];
+        for(int i=0; i<evenNumbers.size(); i++) {
+            result[i] = evenNumbers.get(i);
         }
-        Arrays.sort(result);
         return result;
+    }
+
+    public boolean canBeFormed(int num, int[] digitCount) {
+        int[] numberDigits = new int[10];
+
+        int mod = 0;
+        while(num > 0) {
+            mod = num % 10;
+            numberDigits[mod]++;
+            num /= 10;
+        }
+        for(int i=0; i<numberDigits.length; i++) {
+            if(numberDigits[i] > digitCount[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 }
