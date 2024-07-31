@@ -6,9 +6,7 @@ class Solution {
 
         while(i < j) {
             if(s.charAt(i) != s.charAt(j)) {
-                String skipL = s.substring(i + 1, j + 1);
-                String skipR = s.substring(i, j);
-                return(isPalindrome(skipL) || isPalindrome(skipR));
+                return(isPalindrome(s, i+1, j) || isPalindrome(s, i, j-1));
             }
             i++;
             j--;
@@ -16,8 +14,7 @@ class Solution {
         return true;
     }
 
-    public boolean isPalindrome(String s) {
-        int l = 0, r = s.length() - 1;
+    public boolean isPalindrome(String s, int l, int r) {
         while (l < r) {
             if (s.charAt(l) != s.charAt(r)) {
                 return false;
