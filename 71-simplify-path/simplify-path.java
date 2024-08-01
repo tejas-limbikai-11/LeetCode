@@ -13,12 +13,12 @@ class Solution {
             }
         }
         
-        String str = "";
-        while(!stack.isEmpty()) {
-            str = "/" + stack.pop() + str;
+        StringBuilder sb = new StringBuilder();
+        for(String s: stack) {
+            sb.append("/").append(s);
         }
 
-        if(str.length() == 0) str = "/";
-        return str;
+        if(sb.length() == 0) sb.append("/");
+        return sb.toString();
     }
 }
