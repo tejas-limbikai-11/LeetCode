@@ -3,6 +3,9 @@ class Solution {
         Arrays.sort(target);
         Arrays.sort(arr);
 
-        return Arrays.equals(target, arr);
+        for(int i=0; i<target.length; i++) {
+            if(target[i] != arr[i]) return false;
+        }
+        return true;
     }
 }
