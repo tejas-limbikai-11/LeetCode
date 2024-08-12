@@ -19,35 +19,35 @@ class Solution {
             fast = fast.next.next;
         }
 
-        ListNode midNode = slow;
+        //reverse midnode to end
+        ListNode rev = reverseLL(slow);
 
-        //reverse 2nd half and convert in 2 LLs
+        ListNode curr = head;
+
+        while(rev.next != null) {
+            ListNode tempCurr = curr.next;
+            curr.next = rev;
+
+            ListNode tempRev = rev.next;
+            rev.next = tempCurr;
+
+            curr = tempCurr;
+            rev = tempRev;
+        }
+        
+    }
+
+    public ListNode reverseLL(ListNode head) {
         ListNode prev = null;
-        ListNode curr = midNode.next;
+        ListNode curr = head;
         ListNode next;
-
-        midNode.next = null;
 
         while(curr != null) {
             next = curr.next;
             curr.next = prev;
             prev = curr;
-            curr= next;
+            curr = next;
         }
-
-        //alternate merging
-        ListNode left = head;
-        ListNode right = prev;
-        ListNode nextL, nextR;
-
-        while(left != null && right != null) {
-            nextL = left.next;
-            left.next = right;
-            nextR = right.next;
-            right.next = nextL;
-
-            left = nextL;
-            right = nextR;
-        }
+        return prev;
     }
 }
