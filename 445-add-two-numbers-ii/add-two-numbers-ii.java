@@ -12,12 +12,11 @@ class Solution {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         ListNode head1 = reverseLL(l1);
         ListNode head2 = reverseLL(l2);
-        ListNode dummy = new ListNode(-1);
-        ListNode curr = dummy;
+        ListNode ans = new ListNode();
+        int sum = 0;
         int carry = 0;
 
-        while(head1 != null || head2 != null || carry == 1) {
-            int sum = 0;
+        while(head1 != null || head2 != null) {
             if(head1 != null) {
                 sum += head1.val;
                 head1 = head1.next;
@@ -26,13 +25,14 @@ class Solution {
                 sum += head2.val;
                 head2 = head2.next;
             }
-            sum += carry;
+            ans.val = sum % 10;
             carry = sum / 10;
-            ListNode newNode = new ListNode(sum % 10);
-            curr.next = newNode;
-            curr = curr.next;
+            ListNode newNode = new ListNode(carry);
+            newNode.next = ans;
+            ans = newNode;
+            sum = carry;
         }
-        return reverseLL(dummy.next);
+        return (carry == 0) ? ans.next : ans;
     }
 
     public ListNode reverseLL(ListNode head) {
