@@ -1,22 +1,25 @@
 class Solution {
+    ListNode curr;
+
     public void reorderList(ListNode head) {
-        Stack<ListNode> stack = new Stack<>();
-        ListNode curr = head;
-        while(curr != null) {
-            stack.push(curr);
-            curr = curr.next;
-        }
-
-        int k = stack.size()/2;
         curr = head;
+        solve(head);        
+    }
 
-        while(k-- > 0) {
-            ListNode topNode = stack.pop();
-            ListNode temp = curr.next;
-            curr.next = topNode;
-            topNode.next = temp;
-            curr = temp;
+    public void solve(ListNode head) {
+        if(head == null) return;
+        solve(head.next);
+
+        ListNode temp = curr.next;
+        if(curr.next == null) return;
+        else if(curr == head) {
+            curr.next = null;
+            return;
         }
-        curr.next = null;
+
+        curr.next = head;
+        head.next = (temp == head) ? null : temp;
+
+        curr = temp;
     }
 }
