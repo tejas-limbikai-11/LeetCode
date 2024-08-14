@@ -1,24 +1,40 @@
 class Solution {
     public int smallestDistancePair(int[] nums, int k) {
         int n = nums.length;
-        int max = Integer.MIN_VALUE;
-        for(int num: nums) {
-            max = Math.max(max, num);
-        }
+        Arrays.sort(nums);
 
-        int dist[] = new int[max + 1];
+        int l = 0;
+        int r = nums[n-1] - nums[0];
+        int result = 0;
 
-        for(int i=0; i<n; i++) {
-            for(int j=i+1; j<n; j++) {
-                int d = Math.abs(nums[i] - nums[j]);
-                dist[d]++;
+        while(l <= r) {
+            int mid = l + (r-l) / 2;
+            int countPair = slidingWindow(nums, mid);
+
+            if(countPair < k) {
+                l = mid + 1;
+            }
+            else {
+                result = mid;
+                r = mid - 1;
             }
         }
+        return result;
+    }
 
-        for(int i=0; i<max + 1; i++) {
-            k -= dist[i];
-            if(k <= 0) return i;
+    public int slidingWindow(int[] nums, int mid) {
+        int i = 0;
+        int j = 1;
+        int pairCount = 0;
+
+        while(j < nums.length) {
+            while(nums[j] - nums[i] > mid) {
+                i++;
+            }
+
+            pairCount += (j - i);
+            j++;
         }
-        return -1;
+        return pairCount;
     }
 }
