@@ -4,13 +4,8 @@ public class Solution {
         ListNode b = headB;        
 
         while(a != b) {
-            a = a.next;
-            b = b.next;
-
-            if(a == b) return a;
-
-            if(a == null) a = headB;
-            if(b == null) b = headA;
+            a = (a == null) ? headB : a.next;
+            b = (b == null) ? headA : b.next;
         }
         return a;
     }
