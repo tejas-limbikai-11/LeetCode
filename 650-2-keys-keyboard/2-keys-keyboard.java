@@ -1,22 +1,27 @@
 class Solution {
     public int minSteps(int n) {
         if(n == 1) return 0;
-        int dp[][] = new int[1001][1001];
-        for(int[] d: dp) Arrays.fill(d, -1);
-        return 1 + solve(1, 1, n, dp);
-    }
+        if(n == 2) return 2;
 
-    public int solve(int currA, int clipboard, int n, int[][] dp) {
-        if(currA == n) return 0;
-        if(currA > n) return 1000;
+        int[] dp = new int[n+1];
+        dp[0] = 0;
+        dp[1] = 0;
+        dp[2] = 2;
 
-        if(dp[currA][clipboard] != -1) {
-            return dp[currA][clipboard];
+        for(int i=3; i<=n; i++) {
+            int factor = i/2;
+            while(factor >= 1) {
+                if(i % factor == 0) {
+                    int stepsToPrintFactorAs = dp[factor];
+                    int copy = 1;
+                    int paste = (i / factor) - 1;
+
+                    dp[i] = stepsToPrintFactorAs + copy + paste;
+                    break;
+                }
+                else factor--;
+            }
         }
-
-        int copyAllpaste = 1 + 1 + solve(currA * 2, currA, n, dp);
-        int paste = 1 + solve(currA + clipboard, clipboard, n, dp);
-
-        return Math.min(copyAllpaste, paste);
+        return dp[n];
     }
 }
