@@ -25,6 +25,7 @@ class Solution {
             curr = curr.next.next;
         }
 
+        //Separate the linked lists
         Node newHead = head.next;
         Node newCurr = newHead;
         curr = head;
