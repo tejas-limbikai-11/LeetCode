@@ -1,27 +1,36 @@
 class Solution {
-    public int helper(int[] piles, int[][] dp, int[] suffixSum, int i, int M) {
-        if (i == piles.length) return 0;
-        if (i + 2 * M >= piles.length) return suffixSum[i];
+    public int stoneGameII(int[] piles) {
+        int dp[][][] = new int[2][101][101];
 
-        if (dp[i][M] != 0) return dp[i][M];
-
-        int result = 0;
-        for (int x = 1; x <= 2 * M; ++x) {
-            result = Math.max(result, suffixSum[i] - helper(piles, dp, suffixSum, i + x, Math.max(M, x)));
+        for (int[][] arr2D : dp) {
+            for (int[] arr1D : arr2D) {
+                Arrays.fill(arr1D, -1);
+            }
         }
 
-        dp[i][M] = result;
-        return result;
+        return solveForAlice(1, 0, 1, piles, dp);
     }
 
-    public int stoneGameII(int[] piles) {
-        if (piles.length == 0) return 0;
-        int[][] dp = new int[piles.length][piles.length];
+    public int solveForAlice(int person, int i, int M, int piles[], int[][][] dp) {
+        int n = piles.length;
+        if(i >= n) return 0;
 
-        int[] suffixSum = new int[piles.length];
-        suffixSum[suffixSum.length - 1] = piles[piles.length - 1];
-        for (int i = piles.length - 2; i >= 0; --i) suffixSum[i] = piles[i] + suffixSum[i + 1];
+        if(dp[person][i][M] != -1) {
+            return dp[person][i][M];
+        }
 
-        return helper(piles, dp, suffixSum, 0, 1);
+        int result = (person == 1) ? -1 : Integer.MAX_VALUE;
+        int stones = 0;
+
+        for(int x = 1; x <= Math.min(2 * M, n - i); x++) {
+            stones += piles[i + x - 1];
+
+            if(person == 1) { //Alice
+                result = Math.max(result, stones + solveForAlice(0, i + x, Math.max(M, x), piles, dp));
+            } //Bob
+            else result = Math.min(result, solveForAlice(1, i + x, Math.max(M, x), piles, dp));
+        }
+
+        return dp[person][i][M] = result;
     }
 }
