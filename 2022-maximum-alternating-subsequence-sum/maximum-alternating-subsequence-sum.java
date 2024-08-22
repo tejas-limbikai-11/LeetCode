@@ -1,27 +1,14 @@
 class Solution {
     public long maxAlternatingSum(int[] nums) {
         int n = nums.length;
-        long[][] dp = new long[n+1][2];
-        for(long[] d: dp) Arrays.fill(d, -1);
+        long dp[][] = new long[n+1][2];
 
-        return solve(0, true, nums, dp);
-    }
-
-    public long solve(int idx, boolean flag, int[] nums, long[][] dp) {
-        if(idx >= nums.length) return 0;
-
-        int flagIdx = (flag) ? 1 : 0;  //true -> 1 | false -> 0
-        if(dp[idx][flagIdx] != -1) {
-            return dp[idx][flagIdx];
+        for(int i=1; i<=n; i++) {
+            //length of subsequence becomes even
+            dp[i][0] = Math.max(dp[i-1][1] - nums[i-1], dp[i-1][0]);
+            //length of subsequence becomes odd
+            dp[i][1] = Math.max(dp[i-1][0] + nums[i-1], dp[i-1][1]);
         }
-
-        long skip = solve(idx + 1, flag, nums, dp);
-
-        int value = nums[idx];
-        if(!flag) value *= -1;
-
-        long take = value + solve(idx + 1, !flag, nums, dp);
-
-        return dp[idx][flagIdx] = Math.max(skip, take);
+        return Math.max(dp[n][0], dp[n][1]);
     }
 }
