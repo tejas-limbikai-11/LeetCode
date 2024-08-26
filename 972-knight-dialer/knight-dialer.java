@@ -16,25 +16,26 @@ class Solution {
         );
 
         int[][] dp = new int[5001][10];
-        for(int[] d: dp) Arrays.fill(d, -1);
 
         int result = 0;
 
         for(int cell = 0; cell <= 9; cell++) {
-            result = (result + solve(n-1, cell, adj, dp)) % mod;
+            dp[0][cell] = 1;
+        }
+
+        for(int i=1; i<n; i++) {
+            for(int cell = 0; cell <= 9; cell++) {
+                int ans = 0;
+                for(int nextCell: adj.get(cell)) {
+                    ans = (ans + dp[i-1][nextCell]) % mod;
+                }
+                dp[i][cell] = ans;
+            }
+        }
+
+        for(int cell = 0; cell <= 9; cell++) {
+            result = (result + dp[n-1][cell]) % mod;
         }
         return result;
-    }
-
-    public int solve(int n, int cell, List<List<Integer>> adj, int[][] dp) {
-        if(n == 0) return 1;
-
-        if(dp[n][cell] != -1) return dp[n][cell];
-
-        int ans = 0;
-        for(int nextCell: adj.get(cell)) {
-            ans = (ans + solve(n-1, nextCell, adj, dp)) % mod;
-        }
-        return dp[n][cell] = ans;
     }
 }
