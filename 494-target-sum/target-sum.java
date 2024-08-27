@@ -4,22 +4,20 @@ class Solution {
         int totalSum = 0;
         for(int num: nums) totalSum += num;
 
-        int[][] dp = new int[n][2 * totalSum + 1];
-        for(int[] d: dp) Arrays.fill(d, -1);
-        return solve(0, 0, target, nums, dp, totalSum);
-    }
+        if (target > totalSum || target < -totalSum) return 0;
 
-    public int solve(int idx, int sum, int target, int[] nums, int[][] dp, int totalSum) {
-        if(idx >= nums.length) {
-            if(sum == target) return 1;
-            else return 0;
+        int[][] dp = new int[n + 1][2 * totalSum + 1];
+        dp[n][totalSum] = 1;
+
+        for(int idx=n-1; idx>=0; idx--) {
+            for(int sum=-totalSum; sum<=totalSum; sum++) {
+                int adjustedSum = sum + totalSum;
+                int negative = (adjustedSum - nums[idx] >= 0) ? dp[idx + 1][adjustedSum - nums[idx]] : 0;
+                int positive = (adjustedSum + nums[idx] < 2 * totalSum + 1) ? dp[idx + 1][adjustedSum + nums[idx]] : 0;
+
+                dp[idx][adjustedSum] = negative + positive;
+            }
         }
-
-        if(dp[idx][sum + totalSum] != -1) return dp[idx][sum + totalSum];
-
-        int negative = solve(idx + 1, sum - nums[idx], target, nums, dp, totalSum);
-        int positive = solve(idx + 1, sum + nums[idx], target, nums, dp, totalSum);
-
-        return dp[idx][sum + totalSum] = negative + positive;
+        return dp[0][target + totalSum];
     }
 }
