@@ -13,9 +13,11 @@ class Solution {
                     queue.offer(new int[] {i, j, 0});
                     vis[i][j] = 2;
                 }
+                else if(grid[i][j] == 1) {
+                    vis[i][j] = 1;
+                    countFresh++;
+                }
                 else vis[i][j] = 0;
-
-                if(grid[i][j] == 1) countFresh++;
             }
         }
 
@@ -37,7 +39,7 @@ class Solution {
                 int dr = r + drow[i];
                 int dc = c + dcol[i];
 
-                if(dr >= 0 && dr < m && dc >= 0 && dc < n && vis[dr][dc] == 0 && grid[dr][dc] == 1) {
+                if(dr >= 0 && dr < m && dc >= 0 && dc < n && vis[dr][dc] == 1) {
                     queue.offer(new int[] {dr, dc, t + 1});
                     vis[dr][dc] = 2;
                     count++;
