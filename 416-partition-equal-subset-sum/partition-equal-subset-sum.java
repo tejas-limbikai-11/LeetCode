@@ -8,24 +8,27 @@ class Solution {
         }
         if(totalSum % 2 != 0) return false;
 
-        Boolean[][] dp = new Boolean[n + 1][totalSum / 2 + 1];
-        return subsetSum(nums, totalSum / 2, n, dp);
-    }
+        int sum = totalSum / 2;
 
-    public boolean subsetSum(int arr[], int sum, int n, Boolean[][] dp) {
-        if((n == 0 && sum == 0) || sum == 0) return true;
-        else if(n == 0) return false;
+        boolean[][] dp = new boolean[n + 1][sum + 1];
 
-        if(dp[n][sum] != null) {
-            return dp[n][sum];
+        for(int i=0; i<n+1; i++) {
+            for(int j=0; j<sum+1; j++) {
+                if(i == 0) dp[i][j] = false;
+                if(j == 0) dp[i][j] = true;
+            }
         }
 
-        if(arr[n-1] <= sum) {
-            return dp[n][sum] = subsetSum(arr, sum - arr[n-1], n-1, dp) 
-                || subsetSum(arr, sum, n-1, dp);
+        for(int i=1; i<n+1; i++) {
+            for(int j=1; j<sum+1; j++) {
+                if(nums[i-1] <= j) {
+                    dp[i][j] = dp[i-1][j - nums[i-1]] || dp[i-1][j];
+                }
+                else {
+                    dp[i][j] = dp[i-1][j];
+                }
+            }
         }
-        else {
-            return dp[n][sum] = subsetSum(arr, sum, n-1, dp);
-        }
+        return dp[n][sum];
     }
 }
