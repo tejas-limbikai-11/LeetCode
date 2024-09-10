@@ -1,17 +1,15 @@
 class Solution {
     public ListNode insertGreatestCommonDivisors(ListNode head) {
-        ListNode curr = head;
-
-        while(curr != null && curr.next != null) {
-            int a = curr.val;
-            int b = curr.next.val;
-            int result = gcd(a, b);
-
-            ListNode nextNode = curr.next;
-            curr.next = new ListNode(result);
-            curr.next.next = nextNode;
-            curr = nextNode;
+        if(head == null || head.next == null) {
+            return head;
         }
+            
+        ListNode temp = insertGreatestCommonDivisors(head.next);
+        ListNode gcdNode = new ListNode(gcd(head.val, head.next.val));
+
+        gcdNode.next = temp;
+        head.next = gcdNode; 
+        
         return head;
     }
 
