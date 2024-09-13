@@ -11,26 +11,21 @@ class Solution {
         }
         
         int sum = (totalSum + target) / 2;
-
         int[][] dp = new int[n + 1][sum + 1];
-        for(int[] d: dp) Arrays.fill(d, -1);
-
-        return solve(n, sum, nums, dp);
-    }
-
-    public int solve(int n, int sum, int[] nums, int[][] dp) {
-        if(n == 0 && sum == 0) return 1;
-        else if(n == 0) return 0;
-
-        if(dp[n][sum] != -1) {
-            return dp[n][sum];
+        
+        for(int j=0; j < sum + 1; j++) {
+            dp[0][j] = 0;
         }
+        dp[0][0] = 1;
 
-        if(nums[n-1] <= sum) {
-            int take = solve(n-1, sum - nums[n-1], nums, dp);
-            int notTake = solve(n-1, sum, nums, dp);
-            return dp[n][sum] = (take + notTake);
+        for(int i = 1; i < n + 1; i++) {
+            for(int j = 0; j < sum + 1; j++) {
+                if(nums[i-1] <= j) {
+                    dp[i][j] = dp[i-1][j - nums[i-1]] + dp[i-1][j];
+                }
+                else dp[i][j] = dp[i-1][j];
+            }
         }
-        else return dp[n][sum] = solve(n-1, sum, nums, dp);
+        return dp[n][sum];
     }
 }
