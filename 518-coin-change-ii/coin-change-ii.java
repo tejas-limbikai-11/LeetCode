@@ -1,28 +1,25 @@
 class Solution {
     public int change(int amount, int[] coins) {
-        return coinChange(coins, amount);   
+        int n = coins.length;
+        int[][] dp = new int[n + 1][amount + 1];
+        for(int[] d: dp) Arrays.fill(d, -1);
+        return solve(n, amount, coins, dp);
     }
 
-    public static int coinChange(int coins[], int sum) {
-        int n = coins.length;
-        int dp[][] = new int[n+1][sum+1];
+    public static int solve(int n, int sum, int coins[], int[][] dp) {
+        if(n == 0 && sum == 0 || sum == 0) return 1;
+        else if(n == 0) return 0;
 
-        for(int i=0; i<n+1; i++) {
-            dp[i][0] = 1;
-        }
-        for(int j=1; j<sum+1; j++) {
-            dp[0][j] = 0;
+        if(dp[n][sum] != -1) {
+            return dp[n][sum];
         }
 
-        for(int i=1; i<n+1; i++) {
-            for(int j=1; j<sum+1; j++) {
-                if(coins[i-1] <= j) {   //valid
-                    dp[i][j] = dp[i][j- coins[i-1]] + dp[i-1][j];
-                } else {    //invalid
-                    dp[i][j] = dp[i-1][j];
-                }
-            }
+        int take = 0;
+        if(coins[n-1] <= sum) {
+            take = solve(n, sum - coins[n-1], coins, dp);
         }
-        return dp[n][sum];
+        int notTake = solve(n-1, sum, coins, dp);
+
+        return dp[n][sum] = take + notTake;
     }
 }
