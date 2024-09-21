@@ -1,29 +1,26 @@
 class Solution {
     public int longestCommonSubsequence(String text1, String text2) {
-        return lcsTabulation(text1, text2);
+        int n = text1.length();
+        int m = text2.length();
+        int[][] dp = new int[n+1][m+1];
+        for(int[] d: dp) Arrays.fill(d, -1);
+        return solve(n, m, text1, text2, dp);
     }
 
-    public int lcsTabulation(String str1, String str2){
-        int n = str1.length();
-        int m = str2.length();
-        int dp[][] = new int[n+1][m+1];
-        for(int i=0; i<n+1; i++) {
-            for(int j=0; j<m+1; j++) {
-                if(i == 0 || j == 0) dp[i][j] = 0;
-            }
+    public int solve(int n, int m, String x, String y, int[][] dp) {
+        if(n == 0 || m == 0) return 0;
+
+        if(dp[n][m] != -1) {
+            return dp[n][m];
         }
-        for(int i=1; i<n+1; i++) {
-            for(int j=1; j<m+1; j++) {
-                if(str1.charAt(i-1) == str2.charAt(j-1)) {
-                    dp[i][j] = dp[i-1][j-1] + 1;
-                } 
-                else {                                        
-                    int ans1 = dp[i-1][j];
-                    int ans2 = dp[i][j-1];
-                    dp[i][j] = Math.max(ans1, ans2);
-                }
-            }
+
+        if(x.charAt(n-1) == y.charAt(m-1)) {
+            return dp[n][m] = 1 + solve(n-1, m-1, x, y, dp);
         }
-        return dp[n][m];
+        else {
+            int case1 = solve(n, m-1, x, y, dp);
+            int case2 = solve(n-1, m, x, y, dp);
+            return dp[n][m] = Math.max(case1, case2);
+        }
     }
 }
