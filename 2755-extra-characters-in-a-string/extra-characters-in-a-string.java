@@ -8,26 +8,17 @@ class Solution {
         }
 
         int[] dp = new int[n + 1];
-        Arrays.fill(dp, -1);
 
-        return solve(0, s, n, set, dp);
-    }
+        for(int i=n-1; i>=0; i--) {
+            dp[i] = 1 + dp[i+1];   
 
-    public int solve(int idx, String s, int n, Set<String> set, int[] dp) {
-        if(idx >= n) return 0;
-
-        if(dp[idx] != -1) return dp[idx];
-
-        int notTake = 1 + solve(idx + 1, s, n, set, dp);
-
-        int take = Integer.MAX_VALUE;
-        for(int j = idx; j < n; j++) {
-            String curr = s.substring(idx, j + 1);
-            if(set.contains(curr)) {
-                take = Math.min(take, solve(j + 1, s, n, set, dp));
+            for(int j=i; j<n; j++) {
+                String curr = s.substring(i, j + 1);
+                if(set.contains(curr)) {
+                    dp[i] = Math.min(dp[i], dp[j+1]);
+                }
             }
         }
-
-        return dp[idx] = Math.min(notTake, take);
+        return dp[0];
     }
 }
