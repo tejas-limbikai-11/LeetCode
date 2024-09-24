@@ -17,7 +17,7 @@ class Solution {
             while(!set.contains(val) && val > 0) {
                 val /= 10;
             }
-            result = Math.max(result, (int) Math.log10(val) + 1);
+            result = Math.max(result, (val == 0) ? 0 : String.valueOf(val).length());
         }
         return result;
     }
