@@ -24,9 +24,7 @@ class Solution {
     public void insert(TrieNode root, String word) {
         TrieNode crawler = root;
 
-        for(int i=0; i<word.length(); i++) {
-            char ch = word.charAt(i);
-
+        for(char ch: word.toCharArray()) {
             if(crawler.children[ch - 'a'] == null) {
                 crawler.children[ch - 'a'] = getNode();
             }
