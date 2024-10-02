@@ -1,28 +1,18 @@
 class Solution {
     public int[] arrayRankTransform(int[] arr) {
-        int n = arr.length;
-        int[][] nums = new int[n][2];
+        int[] temp = arr.clone();
+        int n = temp.length;
+        Arrays.sort(temp);
+        Map<Integer, Integer> map = new HashMap<>();
 
         for(int i=0; i<n; i++) {
-            nums[i][0] = arr[i];
-            nums[i][1] = i;
+            map.putIfAbsent(temp[i], map.size() + 1);
         }
-
-        Arrays.sort(nums, (a, b) -> (a[0] - b[0]));
 
         int[] result = new int[n];
-
-        int prev = -1;
-        int rank = 0;
-
         for(int i=0; i<n; i++) {
-            if(nums[i][0] != prev) {
-                rank++;
-            }
-            prev = nums[i][0];
-            result[nums[i][1]] = rank;
+            result[i] = map.get(arr[i]);
         }
-
         return result;
     }
 }
