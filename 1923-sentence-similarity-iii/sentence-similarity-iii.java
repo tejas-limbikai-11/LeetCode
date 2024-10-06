@@ -1,9 +1,5 @@
 class Solution {
     public boolean areSentencesSimilar(String sentence1, String sentence2) {
-        if (sentence1.equals(sentence2)) {
-            return true;
-        }
-
         String[] s1 = sentence1.split(" ");
         String[] s2 = sentence2.split(" ");
 
@@ -14,18 +10,19 @@ class Solution {
             return areSentencesSimilar(sentence2, sentence1);
         }
 
-        int i = 0, j = n-1;
-        int k = 0, l = m-1;
+        Deque<String> dq1 = new LinkedList<>(Arrays.asList(s1));
+        Deque<String> dq2 = new LinkedList<>(Arrays.asList(s2));
 
-        while(i < n && k < m && s1[i].equals(s2[k])) {
-            i++;
-            k++;
+        while(!dq1.isEmpty() && !dq2.isEmpty() && dq1.peekFirst().equals(dq2.peekFirst())) {
+            dq1.pollFirst();
+            dq2.pollFirst();
         }
-        while(l >= k && s1[j].equals(s2[l])) {
-            j--;
-            l--;
+
+        while(!dq1.isEmpty() && !dq2.isEmpty() && dq1.peekLast().equals(dq2.peekLast())) {
+            dq1.pollLast();
+            dq2.pollLast();
         }
-    
-        return l < k;
+
+        return dq2.isEmpty();
     }
 }
