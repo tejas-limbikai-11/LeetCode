@@ -1,22 +1,18 @@
 class Solution {
     public int minSwaps(String s) {
-        int imbalance = 0;
-        int swap = 0;
+        Stack<Character> stack = new Stack<>();
 
         for(char ch: s.toCharArray()) {
             if(ch == '[') {
-                imbalance++;
+                stack.push(ch);
             }
-            else if(ch == ']') {
-                if(imbalance != 0) {
-                    imbalance--;
-                }
-                else {
-                    imbalance++;
-                    swap++;
-                }
+            else if(!stack.isEmpty() && ch == ']') {
+                stack.pop();
             }
         }
-        return swap;
+
+        int noOfOpenBrackets = stack.size();   //no of '['
+
+        return (noOfOpenBrackets + 1) / 2;
     }
 }
