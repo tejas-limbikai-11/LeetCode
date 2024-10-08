@@ -1,18 +1,16 @@
 class Solution {
     public int minSwaps(String s) {
-        Stack<Character> stack = new Stack<>();
+        int size = 0;
 
         for(char ch: s.toCharArray()) {
             if(ch == '[') {
-                stack.push(ch);
+                size++;
             }
-            else if(!stack.isEmpty() && ch == ']') {
-                stack.pop();
+            else if(size > 0) {
+                size--;
             }
         }
 
-        int noOfOpenBrackets = stack.size();   //no of '['
-
-        return (noOfOpenBrackets + 1) / 2;
+        return (size + 1) / 2;
     }
 }
