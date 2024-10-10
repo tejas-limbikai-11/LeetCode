@@ -1,21 +1,20 @@
 class Solution {
     public int maxWidthRamp(int[] nums) {
         int n = nums.length;
-        int[][] arr = new int[n][2];
+        Integer[] arr = new Integer[n];
 
         for(int i=0; i<n; i++) {
-            arr[i][0] = nums[i];
-            arr[i][1] = i;
+            arr[i] = i;
         }
 
-        Arrays.sort(arr, (a, b) -> a[0] - b[0]);
+        Arrays.sort(arr, (i, j) -> Integer.compare(nums[i], nums[j]));
 
         int min = n;
         int result = 0;
 
         for(int i=0; i<n; i++) {
-            result = Math.max(result, arr[i][1] - min);
-            min = Math.min(min, arr[i][1]);
+            result = Math.max(result, arr[i] - min);
+            min = Math.min(min, arr[i]);
         }
         return result;
     }
