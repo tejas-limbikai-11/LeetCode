@@ -3,23 +3,24 @@ class Solution {
         int n = s.length();
         int m = t.length();
         int[][] dp = new int[n+1][m+1];
-        for(int[] d: dp) Arrays.fill(d, -1);
-        return solve(n, m, s, t, dp);
-    }
 
-    public int solve(int i, int j, String s, String t, int[][] dp) {
-        if(j == 0) return 1;
-        if(i == 0) return 0;
-
-        if(dp[i][j] != -1) {
-            return dp[i][j];
+        for(int i=0; i<n+1; i++) {
+            for(int j=0; j<m+1; j++) {
+                if(i == 0) dp[i][j] = 0;
+                if(j == 0) dp[i][j] = 1;
+            }
         }
 
-        if(s.charAt(i-1) == t.charAt(j-1)) {
-            int take = solve(i - 1, j - 1, s, t, dp);
-            int skip = solve(i - 1, j, s, t, dp);
-            return dp[i][j] = take + skip;
+        for(int i=1; i<n+1; i++) {
+            for(int j=1; j<m+1; j++) {
+                if(s.charAt(i-1) == t.charAt(j-1)) {
+                    int take = dp[i-1][j-1];
+                    int skip = dp[i-1][j];
+                    dp[i][j] = take + skip;
+                }
+                else dp[i][j] = dp[i-1][j];
+            }
         }
-        else return dp[i][j] = solve(i - 1, j, s, t, dp);
+        return dp[n][m];
     }
 }
