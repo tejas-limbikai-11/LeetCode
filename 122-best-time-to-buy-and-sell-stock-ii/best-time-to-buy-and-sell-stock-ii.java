@@ -2,30 +2,26 @@ class Solution {
     public int maxProfit(int[] prices) {
         int n = prices.length;
         int[][] dp = new int[n+1][2];
-        for(int[] d: dp) Arrays.fill(d, -1);
-        
-        return solve(0, 1, prices, dp);
-    }
 
-    public int solve(int idx, int canBuy, int[] prices, int[][] dp) {
-        if(idx == prices.length) return 0;
+        dp[n][0] = dp[n][1] = 0;    //last day
 
-        if(dp[idx][canBuy] != -1) {
-            return dp[idx][canBuy];
+        for(int idx = n-1; idx >= 0; idx--) {
+            for(int canBuy = 0; canBuy <= 1; canBuy++) {
+                int profit = 0;
+
+                if(canBuy == 1) {
+                    int buy = dp[idx + 1][0] - prices[idx];
+                    int notBuy = dp[idx + 1][1];
+                    profit = Math.max(buy, notBuy);
+                }
+                else {
+                    int sell = dp[idx + 1][1] + prices[idx];
+                    int notSell = dp[idx + 1][0];
+                    profit = Math.max(sell, notSell);
+                }
+                dp[idx][canBuy] = profit;
+            }
         }
-
-        int profit = 0;
-
-        if(canBuy == 1) {
-            int buy = solve(idx + 1, 0, prices, dp) - prices[idx];
-            int notBuy = solve(idx + 1, 1, prices ,dp);
-            profit = Math.max(buy, notBuy);
-        }
-        else {
-            int sell = solve(idx + 1, 1, prices ,dp) + prices[idx];
-            int notSell = solve(idx + 1, 0, prices, dp);
-            profit = Math.max(sell, notSell);
-        }
-        return dp[idx][canBuy] = profit;
+        return dp[0][1];
     }
 }
