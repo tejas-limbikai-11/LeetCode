@@ -1,12 +1,31 @@
 class Solution {
     public int maxProfit(int[] prices) {
-        int maxProfit = 0;
+        int n = prices.length;
+        int[][] dp = new int[n+1][2];
+        for(int[] d: dp) Arrays.fill(d, -1);
+        
+        return solve(0, 1, prices, dp);
+    }
 
-        for(int i=0; i<prices.length - 1; i++) {
-            if(prices[i+1] > prices[i]) {
-                maxProfit += (prices[i+1] - prices[i]);
-            }
-        }   
-        return maxProfit;
+    public int solve(int idx, int canBuy, int[] prices, int[][] dp) {
+        if(idx == prices.length) return 0;
+
+        if(dp[idx][canBuy] != -1) {
+            return dp[idx][canBuy];
+        }
+
+        int profit = 0;
+
+        if(canBuy == 1) {
+            int buy = solve(idx + 1, 0, prices, dp) - prices[idx];
+            int notBuy = solve(idx + 1, 1, prices ,dp);
+            profit = Math.max(buy, notBuy);
+        }
+        else {
+            int sell = solve(idx + 1, 1, prices ,dp) + prices[idx];
+            int notSell = solve(idx + 1, 0, prices, dp);
+            profit = Math.max(sell, notSell);
+        }
+        return dp[idx][canBuy] = profit;
     }
 }
