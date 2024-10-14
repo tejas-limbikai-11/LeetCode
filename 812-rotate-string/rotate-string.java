@@ -4,11 +4,8 @@ class Solution {
         if(n != goal.length()) return false;
         String str = s + s;
 
-        for(int i=0; i<=n; i++) {
-            if(str.substring(i, i + n).equals(goal)) {
-                return true;
-            }
-        }
+        if(str.contains(goal)) return true;
+        
         return false;
     }
 }
