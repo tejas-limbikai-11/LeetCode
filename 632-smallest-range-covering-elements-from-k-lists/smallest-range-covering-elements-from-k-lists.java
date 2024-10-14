@@ -4,36 +4,32 @@ class Solution {
         int[] arr = new int[k];
         int[] resultRange = {-1000000, 1000000};
 
-        while(true) {
-            int minEl = Integer.MAX_VALUE;
-            int maxEl = Integer.MIN_VALUE;
-            int minElListIdx = 0;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+        int maxEl = Integer.MIN_VALUE;
 
-            for(int i=0; i<k; i++) {
-                int listIdx = i;
-                int elIdx = arr[i];
-                int element = nums.get(listIdx).get(elIdx);
+        for(int i=0; i<k; i++) {
+            pq.offer(new int[] {nums.get(i).get(0), i, 0});
+            maxEl = Math.max(maxEl, nums.get(i).get(0));
+        }
 
-                if(element < minEl) {
-                    minEl = element;
-                    minElListIdx = listIdx;
-                }
-
-                maxEl = Math.max(maxEl, element);
-            }
+        while(!pq.isEmpty()) {
+            int[] curr = pq.poll();
+            int minEl = curr[0];
+            int listIdx = curr[1];
+            int elIdx = curr[2];
 
             if(maxEl - minEl < resultRange[1] - resultRange[0]) {
                 resultRange[0] = minEl;
                 resultRange[1] = maxEl;
             }
 
-            int nextIdx = arr[minElListIdx] + 1;
-            if(nextIdx >= nums.get(minElListIdx).size()) {
-                break;
+            if(elIdx + 1 < nums.get(listIdx).size()) {
+                int nextElement = nums.get(listIdx).get(elIdx + 1);
+                pq.offer(new int[] {nextElement, listIdx, elIdx + 1});
+                maxEl = Math.max(maxEl, nextElement);
             }
-            arr[minElListIdx] = nextIdx;
+            else break;
         }
-
         return resultRange;
     }
 }
