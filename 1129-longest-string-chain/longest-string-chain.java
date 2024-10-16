@@ -1,23 +1,30 @@
 class Solution {
     public int longestStrChain(String[] words) {
         int n = words.length;
-        int[] dp = new int[n];
-        Arrays.fill(dp, 1);
-        int result = 1;
+        int[][] dp = new int[n+1][n+1];
+        for(int[] d: dp) Arrays.fill(d, -1);
 
         Arrays.sort(words, (s1, s2) -> Integer.compare(s1.length(), s2.length()));
-
-        for(int idx = 0; idx < n; idx++) {
-            for(int prevIdx = 0; prevIdx < idx; prevIdx++) {
-                if(isPredecessor(words[prevIdx], words[idx])) {
-                    dp[idx] = Math.max(dp[idx], 1 + dp[prevIdx]);
-                }
-            }
-            result = Math.max(result, dp[idx]);
-        }
-        return result;
+        return solve(words, 0, -1, dp);
     }
-    
+
+    public int solve(String[] words, int idx, int prevIdx, int[][] dp) {
+        if(idx >= words.length) return 0;
+
+        if(dp[idx][prevIdx + 1] != -1) {
+            return dp[idx][prevIdx + 1];
+        }
+
+        int take = 0;
+        if(prevIdx == -1 || isPredecessor(words[prevIdx], words[idx])) {
+            take = 1 + solve(words, idx + 1, idx, dp);
+        }
+
+        int skip = solve(words, idx + 1, prevIdx, dp);
+
+        return dp[idx][prevIdx + 1] = Math.max(take, skip);
+    }
+
     public boolean isPredecessor(String prev, String curr) {
         int m = prev.length();
         int n = curr.length();
