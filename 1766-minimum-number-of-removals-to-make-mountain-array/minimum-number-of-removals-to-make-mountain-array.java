@@ -1,40 +1,36 @@
 class Solution {
     public int minimumMountainRemovals(int[] nums) {
         int n = nums.length;
-        int[] LIS = new int[n];
-        int[] LDS = new int[n];
-
-        //LIS
-        for(int i=0; i<n; i++) {
-            int ele = nums[i];
-            LIS[i] = 1;
-            
-            for(int j=i-1; j>=0; j--) {
-                if(nums[j] < ele) {
-                    LIS[i] = Math.max(LIS[i], LIS[j]+1);
+        
+        int[] dp1 = new int[n];
+        Arrays.fill(dp1, 1);
+        int[] dp2 = new int[n];
+        Arrays.fill(dp2, 1);
+        int[] bitonic = new int[n];
+        
+        for(int idx = 0; idx < n; idx++) {
+            for(int prevIdx = 0; prevIdx < idx; prevIdx++) {
+                if(nums[idx] > nums[prevIdx]) {
+                    dp1[idx] = Math.max(dp1[idx], 1 + dp1[prevIdx]);
                 }
             }
         }
-
-        //LDS
-        for(int i=n-1; i>=0; i--) {
-            int ele = nums[i];
-            LDS[i] = 1;
-            
-            for(int j=i+1; j<n; j++) {
-                if(nums[j] < ele) {
-                    LDS[i] = Math.max(LDS[i], LDS[j]+1);
+        
+        for(int idx = n-1; idx >= 0; idx--) {
+            for(int prevIdx = n-1; prevIdx > idx; prevIdx--) {
+                if(nums[idx] > nums[prevIdx]) {
+                    dp2[idx] = Math.max(dp2[idx], 1 + dp2[prevIdx]);
                 }
             }
         }
-
-        int max = 0;   //max mountain array length
-
+        
+        int length = 0;
         for(int i=0; i<n; i++) {
-            if(LIS[i] == 1 || LDS[i] == 1) continue;
-            max = Math.max(max, LIS[i] + LDS[i] - 1);
+            if(dp1[i] > 1 && dp2[i] > 1) {
+                bitonic[i] = dp1[i] + dp2[i] - 1;
+                length = Math.max(length, bitonic[i]);
+            }
         }
-
-        return n - max;
+        return n - length;
     }
 }   
