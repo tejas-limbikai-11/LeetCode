@@ -7,13 +7,13 @@ class Solution {
 
         Arrays.sort(words, (s1, s2) -> Integer.compare(s1.length(), s2.length()));
 
-        for(int i=0; i<n; i++) {
-            for(int j=0; j<i; j++) {
-                if(isPredecessor(words[j], words[i])) {
-                    dp[i] = Math.max(dp[i], dp[j] + 1);
-                    result = Math.max(result, dp[i]);
+        for(int idx = 0; idx < n; idx++) {
+            for(int prevIdx = 0; prevIdx < idx; prevIdx++) {
+                if(isPredecessor(words[prevIdx], words[idx])) {
+                    dp[idx] = Math.max(dp[idx], 1 + dp[prevIdx]);
                 }
             }
+            result = Math.max(result, dp[idx]);
         }
         return result;
     }
