@@ -3,37 +3,28 @@ class Solution {
         int n = grid.length;
         int m = grid[0].length;
         int[][] dp = new int[n][m];
-        for(int[] d: dp) Arrays.fill(d, -1);
         int count = 0;
-
-        for(int i=0; i<n; i++) {
-            count = Math.max(count, solve(i, 0, grid, dp));
-        }
-        return count;
-    }
-
-    public int solve(int r, int c, int[][] grid, int[][] dp) {
-        if(r < 0 || r >= grid.length || c < 0 || c >= grid[0].length) {
-            return 0;
-        }
-
-        if(dp[r][c] != -1) {
-            return dp[r][c];
-        }
-
         int[][] directions = {{-1, 1}, {0, 1}, {1, 1}};
-        int take = 0;
 
-        for(int[] d: directions) {
-            int newR = r + d[0];
-            int newC = c + d[1];
+        for(int c=m-1; c>=0; c--) {
+            for(int r=0; r<n; r++) {
 
-            if(newR >= 0 && newR < grid.length && newC >= 0 && newC < grid[0].length
-            && grid[newR][newC] > grid[r][c]) {
-                take = Math.max(take, 1 + solve(newR, newC, grid, dp));
+                for(int[] d: directions) {
+                    int newR = r + d[0];
+                    int newC = c + d[1];
+
+                    if(newR >= 0 && newR < n && newC >= 0 && newC < m
+                    && grid[newR][newC] > grid[r][c]) {
+                        dp[r][c] = Math.max(dp[r][c], 1 + dp[newR][newC]);
+                    }
+                }
+
             }
         }
-        
-        return dp[r][c] = take;
+
+        for(int i=0; i<n; i++) {
+            count = Math.max(count, dp[i][0]);
+        }
+        return count;
     }
 }
