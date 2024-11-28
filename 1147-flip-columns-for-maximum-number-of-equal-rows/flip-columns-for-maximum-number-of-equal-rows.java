@@ -10,7 +10,7 @@ class Solution {
             int firstVal = row[0];
 
             for(int col = 0; col < n; col++) {
-                rowPattern.append(row[col] == firstVal ? "S" : "B");
+                rowPattern.append(row[col] == firstVal ? "S" : "C");  
             }
 
             map.put(rowPattern.toString(), map.getOrDefault(rowPattern.toString(), 0) + 1);
