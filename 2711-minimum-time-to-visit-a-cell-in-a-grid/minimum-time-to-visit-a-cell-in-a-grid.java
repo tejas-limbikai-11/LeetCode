@@ -4,15 +4,11 @@ class Solution {
         int m = grid[0].length;
 
         if(grid[0][1] > 1 && grid[1][0] > 1) return -1;
-        
-        int[][] result = new int[n][m];
-        for(int[] arr: result) Arrays.fill(arr, Integer.MAX_VALUE);
-        result[0][0] = 0;
 
         int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
         boolean[][] visited = new boolean[n][m];
 
-        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> Integer.compare(a[0], b[0]));
         pq.offer(new int[]{0, 0, 0});   //time, i, j
 
         while(!pq.isEmpty()) {
@@ -20,6 +16,8 @@ class Solution {
             int time = curr[0];
             int i = curr[1];
             int j = curr[2];
+
+            if(i == n - 1 && j == m - 1) return time;
 
             if(visited[i][j]) continue;
             visited[i][j] = true;
@@ -29,25 +27,18 @@ class Solution {
                 int c = j + dir[1];
 
                 if(r >= 0 && r < n && c >= 0 && c < m) {
-                    int nextTime = 0;
-
                     if(grid[r][c] <= time + 1) {
-                        nextTime = time + 1;
+                        pq.offer(new int[]{time + 1, r, c});
                     }
                     else if((grid[r][c] - time) % 2 == 0) {
-                        nextTime = grid[r][c] + 1;
+                        pq.offer(new int[]{grid[r][c] + 1, r, c});
                     }
                     else if((grid[r][c] - time) % 2 != 0) {
-                        nextTime = grid[r][c];
-                    }
-
-                    if(nextTime < result[r][c]) {
-                        result[r][c] = nextTime;
-                        pq.offer(new int[]{nextTime, r, c});
+                        pq.offer(new int[]{grid[r][c], r, c});
                     }
                 }
             }
         }
-        return result[n-1][m-1];
+        return -1;
     }
 }
