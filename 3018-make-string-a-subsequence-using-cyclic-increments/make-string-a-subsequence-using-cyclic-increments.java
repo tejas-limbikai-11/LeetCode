@@ -9,11 +9,8 @@ class Solution {
             char char2 = str2.charAt(j);
             int diff = char2 - char1;
 
-            if(diff == 0 || diff == 1) {
-                j++;
-            }
-            else if(diff < 0) {       
-                if(diff + 26 == 1) j++;     //to handle z, a case
+            if(diff == 0 || diff == 1 || diff + 25 == 0) {  //to handle z, a case
+                j++; 
             }
             i++;
         }
