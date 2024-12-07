@@ -17,27 +17,44 @@ class Solution {
         boolean[] inRecursion = new boolean[numCourses];
         
         for(int i=0; i<numCourses; i++) {
-            if(!visited[i] && isCycleDFS(i, visited, inRecursion, adj)) {
+            if(!visited[i] && isCycleBFS(numCourses, adj)) {
                 return false;  //cycle found
             }
         }
         return true;
     }
 
-    public boolean isCycleDFS(int u, boolean[] visited, boolean[] inRecursion, Map<Integer, List<Integer>> adj) {
-        visited[u] = true;
-        inRecursion[u] = true;
+    public boolean isCycleBFS(int numCourses, Map<Integer, List<Integer>> adj) {
+        int[] indegree = new int[numCourses];
+        int count = 0;
 
-        for(int v: adj.get(u)) {
-            if(!visited[v]) {
-                if(isCycleDFS(v, visited, inRecursion, adj)) {
-                    return true;
-                }
+        for(int u=0; u<numCourses; u++) {
+            for(int v: adj.get(u)) {
+                indegree[v]++;
             }
-            else if(inRecursion[v]) return true;
         }
 
-        inRecursion[u] = false;
-        return false;
+        Queue<Integer> queue = new LinkedList<>();
+
+        for(int i=0; i<numCourses; i++) {
+            if(indegree[i] == 0) {
+                queue.offer(i);
+                count++;
+            }
+        }
+        
+        while(!queue.isEmpty()) {
+            int u = queue.poll();
+
+            for(int v: adj.get(u)) {
+                indegree[v]--;
+                if(indegree[v] == 0) {
+                    queue.offer(v);
+                    count++;
+                }
+            }
+        }
+
+        return count != numCourses;
     }
 }
