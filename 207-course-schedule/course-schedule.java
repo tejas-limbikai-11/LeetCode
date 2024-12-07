@@ -12,16 +12,9 @@ class Solution {
 
             adj.get(u).add(v);
         }   
-
-        boolean[] visited = new boolean[numCourses];
-        boolean[] inRecursion = new boolean[numCourses];
         
-        for(int i=0; i<numCourses; i++) {
-            if(!visited[i] && isCycleBFS(numCourses, adj)) {
-                return false;  //cycle found
-            }
-        }
-        return true;
+        if(isCycleBFS(numCourses, adj)) return false;  //cycle found
+        else return true;
     }
 
     public boolean isCycleBFS(int numCourses, Map<Integer, List<Integer>> adj) {
