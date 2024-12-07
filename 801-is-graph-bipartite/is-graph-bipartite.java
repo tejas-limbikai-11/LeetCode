@@ -18,7 +18,7 @@ class Solution {
 
         for(int i=0; i<V; i++) {
             if(color[i] == -1) {
-                if(!checkBipartiteDFS(adj, i, color, 1)) {
+                if(!checkBipartiteBFS(adj, i, color, 1)) {
                     return false;
                 }
             }
@@ -26,16 +26,19 @@ class Solution {
         return true; 
     }
 
-    public boolean checkBipartiteDFS(Map<Integer, List<Integer>> adj, int curr, int[] color, int currColor) {
+    public boolean checkBipartiteBFS(Map<Integer, List<Integer>> adj, int curr, int[] color, int currColor) {
+        Queue<Integer> queue = new LinkedList<>();
         color[curr] = currColor;
+        queue.offer(curr);
         
-        for(int v: adj.get(curr)) {
-            if(color[v] == color[curr]) return false;
+        while(!queue.isEmpty()) {
+            int u = queue.poll();
             
-            if(color[v] == -1) {
-                int colorOfV = 1 - currColor;
-                if(!checkBipartiteDFS(adj, v, color, colorOfV)) {
-                    return false;
+            for(int v: adj.get(u)) {
+                if(color[v] == color[u]) return false;
+                else if(color[v] == -1) {
+                    color[v] = 1 - color[u];
+                    queue.offer(v);
                 }
             }
         }
