@@ -2,47 +2,49 @@ class Solution {
     public int makeConnected(int n, int[][] connections) {
         if(connections.length < n-1) return -1;     //don't have enough edge to connect all
 
-        Map<Integer, List<Integer>> adj = new HashMap<>();
-        
+        int components = n;
+        int[] rank = new int[n];
+        int[] parent = new int[n];
         for(int i=0; i<n; i++) {
-            adj.put(i, new ArrayList<>());
+            parent[i] = i;
         }
 
         for(int[] arr: connections) {
-            int u = arr[0];
-            int v = arr[1];
+            int x = arr[0];
+            int y = arr[1];
+            int xParent = find(x, parent);
+            int yParent = find(y, parent);
 
-            adj.get(u).add(v);
-            adj.get(v).add(u);
-        }
-
-        int count = 0;  //number of connected components
-        boolean[] visited = new boolean[n];
-
-        for(int i=0; i<n; i++) {
-            if(!visited[i]) {
-                BFS(adj, i, visited);
-                count++;
+            if(xParent != yParent) {
+                union(x, y, parent, rank);
+                components--;
             }
         }
-        return count - 1;
+        
+        return components - 1;
     }
     
-    public void BFS(Map<Integer, List<Integer>> adj, int u, boolean[] visited) {
-        Queue<Integer> queue = new LinkedList<>();
-        
-        queue.offer(u);
-        visited[u] = true;
-        
-        while(!queue.isEmpty()) {
-            int curr = queue.poll();
-            
-            for(int v: adj.get(curr)) {
-                if(!visited[v]) {
-                    queue.offer(v);
-                    visited[v] = true;
-                }
-            }
+    public int find(int i, int[] parent) {
+        if(i == parent[i]) return i;
+
+        return parent[i] = find(parent[i], parent);
+    }
+    
+    public void union(int x, int y, int[] parent, int[] rank) {
+        int xParent = find(x, parent);
+        int yParent = find(y, parent);
+
+        if(xParent == yParent) return;
+
+        if(rank[xParent] > rank[yParent]) {
+            parent[yParent] = xParent;
         }
-    }   
+        else if(rank[xParent] < rank[yParent]) {
+            parent[xParent] = yParent;
+        }
+        else {
+            parent[xParent] = yParent;
+            rank[yParent]++;
+        }
+    }
 }
