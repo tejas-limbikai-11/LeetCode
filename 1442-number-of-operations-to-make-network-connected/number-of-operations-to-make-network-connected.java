@@ -1,6 +1,9 @@
 class Solution {
+    int components;
+
     public int makeConnected(int n, int[][] connections) {
         if(connections.length < n-1) return -1;     //don't have enough edge to connect all
+        components = n;
 
         Map<Integer, List<Integer>> adj = new HashMap<>();
         
@@ -16,26 +19,44 @@ class Solution {
             adj.get(v).add(u);
         }
 
-        int count = 0;  //number of connected components
-        boolean[] visited = new boolean[n];
-
+        int[] parent = new int[n];
         for(int i=0; i<n; i++) {
-            if(!visited[i]) {
-                DFS(adj, i, visited);
-                count++;
-            }
+            parent[i] = i;
         }
-        return count - 1;
+        int[] rank = new int[n];
+
+        for(int[] arr: connections) {
+            int x = arr[0];
+            int y = arr[1];
+
+            union(x, y, parent, rank);
+        }
+        
+        return components - 1;
     }
     
-    public void DFS(Map<Integer, List<Integer>> adj, int u, boolean[] visited) {
-        if(visited[u]) return;
-        visited[u] = true;
+    public int find(int i, int[] parent) {
+        if(i == parent[i]) return i;
 
-        for(int v: adj.get(u)) {
-            if(!visited[v]) {
-                DFS(adj, v, visited);
-            }
+        return parent[i] = find(parent[i], parent);
+    }
+    
+    public void union(int x, int y, int[] parent, int[] rank) {
+        int xParent = find(x, parent);
+        int yParent = find(y, parent);
+
+        if(xParent == yParent) return;
+
+        if(rank[xParent] > rank[yParent]) {
+            parent[yParent] = xParent;
         }
+        else if(rank[xParent] < rank[yParent]) {
+            parent[xParent] = yParent;
+        }
+        else {
+            parent[xParent] = yParent;
+            rank[yParent]++;
+        }
+        components--;
     }
 }
