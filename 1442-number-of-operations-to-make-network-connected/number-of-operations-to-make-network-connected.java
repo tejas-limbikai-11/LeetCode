@@ -16,49 +16,33 @@ class Solution {
             adj.get(v).add(u);
         }
 
-        int components = n;
-        int[] rank = new int[n];
-        int[] parent = new int[n];
+        int count = 0;  //number of connected components
+        boolean[] visited = new boolean[n];
+
         for(int i=0; i<n; i++) {
-            parent[i] = i;
-        }
-
-        for(int[] arr: connections) {
-            int x = arr[0];
-            int y = arr[1];
-            int xParent = find(x, parent);
-            int yParent = find(y, parent);
-
-            if(xParent != yParent) {
-                union(x, y, parent, rank);
-                components--;
+            if(!visited[i]) {
+                BFS(adj, i, visited);
+                count++;
             }
         }
+        return count - 1;
+    }
+    
+    public void BFS(Map<Integer, List<Integer>> adj, int u, boolean[] visited) {
+        Queue<Integer> queue = new LinkedList<>();
         
-        return components - 1;
-    }
-    
-    public int find(int i, int[] parent) {
-        if(i == parent[i]) return i;
-
-        return parent[i] = find(parent[i], parent);
-    }
-    
-    public void union(int x, int y, int[] parent, int[] rank) {
-        int xParent = find(x, parent);
-        int yParent = find(y, parent);
-
-        if(xParent == yParent) return;
-
-        if(rank[xParent] > rank[yParent]) {
-            parent[yParent] = xParent;
+        queue.offer(u);
+        visited[u] = true;
+        
+        while(!queue.isEmpty()) {
+            int curr = queue.poll();
+            
+            for(int v: adj.get(curr)) {
+                if(!visited[v]) {
+                    queue.offer(v);
+                    visited[v] = true;
+                }
+            }
         }
-        else if(rank[xParent] < rank[yParent]) {
-            parent[xParent] = yParent;
-        }
-        else {
-            parent[xParent] = yParent;
-            rank[yParent]++;
-        }
-    }
+    }   
 }
