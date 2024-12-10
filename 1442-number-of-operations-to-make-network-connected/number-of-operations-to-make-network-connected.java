@@ -1,9 +1,6 @@
 class Solution {
-    int components;
-
     public int makeConnected(int n, int[][] connections) {
         if(connections.length < n-1) return -1;     //don't have enough edge to connect all
-        components = n;
 
         Map<Integer, List<Integer>> adj = new HashMap<>();
         
@@ -19,17 +16,23 @@ class Solution {
             adj.get(v).add(u);
         }
 
+        int components = n;
+        int[] rank = new int[n];
         int[] parent = new int[n];
         for(int i=0; i<n; i++) {
             parent[i] = i;
         }
-        int[] rank = new int[n];
 
         for(int[] arr: connections) {
             int x = arr[0];
             int y = arr[1];
+            int xParent = find(x, parent);
+            int yParent = find(y, parent);
 
-            union(x, y, parent, rank);
+            if(xParent != yParent) {
+                union(x, y, parent, rank);
+                components--;
+            }
         }
         
         return components - 1;
@@ -57,6 +60,5 @@ class Solution {
             parent[xParent] = yParent;
             rank[yParent]++;
         }
-        components--;
     }
 }
