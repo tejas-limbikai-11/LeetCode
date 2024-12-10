@@ -26,12 +26,12 @@ class Solution {
             componentNodes[iParent]++;
         }
 
-        int len = n;
+        int remainingNodes = n;
 
-        for(int i=0; i<len; i++) {
+        for(int i=0; i<n; i++) {
             long nodes = componentNodes[i];
-            ans = ans + (nodes * (n - nodes));
-            n -= nodes;
+            ans += (nodes * (remainingNodes - nodes));
+            remainingNodes -= nodes;
         }
 
         return ans;
