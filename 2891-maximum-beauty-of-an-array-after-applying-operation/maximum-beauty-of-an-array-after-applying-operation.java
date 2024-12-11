@@ -1,23 +1,34 @@
 class Solution {
     public int maximumBeauty(int[] nums, int k) {
-        List<int[]> intervals = new ArrayList<>();
-        for(int num: nums) {
-            intervals.add(new int[] {num - k, num + k});
-        }
-
-        intervals.sort((a, b) -> Integer.compare(a[0], b[0]));
+        int n = nums.length;
+        Arrays.sort(nums);
 
         int maxBeauty = 0;
-        Queue<int[]> queue = new LinkedList<>();
+        for(int i=0; i<n; i++) {
+            int x = nums[i];
+            int y = x + 2 * k;
 
-        for(int[] interval: intervals) {
-            while(!queue.isEmpty() && queue.peek()[1] < interval[0]) {
-                queue.poll();
-            }
-            
-            queue.offer(interval);
-            maxBeauty = Math.max(maxBeauty, queue.size());
+            int j = binarySearch(nums, y);
+
+            maxBeauty = Math.max(maxBeauty, j - i + 1);
         }
         return maxBeauty;
+    }
+
+    public int binarySearch(int[] nums, int target) {
+        int result = 0;
+        int l = 0; 
+        int r = nums.length - 1;
+
+        while(l <= r) {
+            int mid = l + (r - l) / 2;
+
+            if(nums[mid] <= target) {
+                result = mid;
+                l = mid + 1;
+            }
+            else r = mid - 1;
+        }
+        return result;
     }
 }
