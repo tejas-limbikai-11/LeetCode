@@ -1,54 +1,36 @@
 class Solution {
-    public double maxAverageRatio(int[][] classes, int extraStudents) {
-        PriorityQueue<ClassRecord> pq = new PriorityQueue<>(new Compare());
-        
-        for(int[] cl : classes)
-            pq.add(new ClassRecord(cl));
-        
-        ClassRecord cl;
-        while(extraStudents-- > 0)
-            pq.add(pq.remove().addOneStudent());
-        
-        double sum = 0;
-        while(!pq.isEmpty()){
-            cl = pq.remove();
-            sum += (double)cl.pass / cl.total;
-        }
+  public double maxAverageRatio(int[][] classes, int extraStudents) {
+    int n = classes.length;
+    PriorityQueue<double[]> pq = new PriorityQueue<>((a, b) -> Double.compare(b[0], a[0]));
 
-        return sum / classes.length;
-    }
-}
-
-class ClassRecord{
-    int pass;
-    int total;
-    double inc;
-
-    public ClassRecord(int[] array){
-        pass = array[0];
-        total = array[1];
-        inc = getIncrement();
+    for(int i=0; i<n; i++) {
+        int p = classes[i][0];
+        int t = classes[i][1];
+        double PR = (double) p / t;
+        double newPR = (double) (p + 1) / (t + 1);
+        pq.offer(new double[] {newPR - PR, i});
     }
 
-    public ClassRecord addOneStudent(){
-        pass++;
-        total++;
-        inc = getIncrement();
-        return this;
+    while (extraStudents-- > 0) {
+        double[] curr = pq.poll();
+        double diff = curr[0];
+        int idx = (int) curr[1];     
+        classes[idx][0] += 1;
+        classes[idx][1] += 1;
+
+        int p = classes[idx][0];   
+        int t = classes[idx][1];   
+        double PR = (double) p / t;
+        double newPR = (double) (p + 1) / (t + 1);
+        pq.offer(new double[]{newPR - PR, idx});
     }
 
-    private double getIncrement(){
-        return (pass + 1.0) / (total + 1) - (double)pass / total;
+    double result = 0;
+    for(int i=0; i<n; i++) {
+        int p = classes[i][0];
+        int t = classes[i][1];
+        result += (double) p / t;
     }
-}
-
-class Compare implements Comparator<ClassRecord>{
-    public int compare(ClassRecord a, ClassRecord b){
-        if(a.inc < b.inc)
-            return 1;
-        else if(a.inc > b.inc)
-            return -1;
-        else
-            return 0;
-    }
+    return result / n;
+  }
 }
