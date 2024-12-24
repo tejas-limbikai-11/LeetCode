@@ -1,72 +1,41 @@
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
 class Solution {
     public int minimumOperations(TreeNode root) {
-        Queue<TreeNode> nm=new LinkedList<>();
-        nm.offer(root);
-        int s=0;
-        while(!nm.isEmpty())
-        {
-            int m=0,l=nm.size();
-            List<Integer> kk=new ArrayList<>();
-            for(int i=0;i<l;i++)
-            {
-                if(nm.peek().left!=null)
-                {
-                    nm.add(nm.peek().left);
-                }
-                if(nm.peek().right!=null)
-                {
-                    nm.add(nm.peek().right);
-                }
-                int f=nm.poll().val;
-                kk.add(f);
+        int result = 0;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        while(!queue.isEmpty()) {
+            int n = queue.size();
+            List<Integer> list = new ArrayList<>();
+
+            while(n-- > 0) {
+                TreeNode curr = queue.poll();
+                list.add(curr.val);
+
+                if(curr.left != null) queue.offer(curr.left);
+                if(curr.right != null) queue.offer(curr.right);
             }
-            s+=task(kk);
+            result += minSwapsSortArray(list);
         }
-        return s;
+        return result;
     }
-    public int task(List<Integer> nm)
-    {
-        Map<Integer,Integer> kk=new HashMap<>();
-        for(int i=0;i<nm.size();i++)
-        {
-            kk.put(nm.get(i),i);
+
+    public int minSwapsSortArray(List<Integer> list) {
+        List<Integer> sortedList = new ArrayList<>(list);
+        Collections.sort(sortedList);
+        Map<Integer, Integer> map = new HashMap<>();
+
+        for(int i=0; i<sortedList.size(); i++) {
+            map.put(sortedList.get(i), i);
         }
-        Collections.sort(nm);
-        boolean k[]=new boolean[nm.size()];
-        int s=0;
-        for(int i=0;i<nm.size();i++)
-        {
-            if(k[i] || kk.get(nm.get(i))==i)
-            {
-                continue;
-            }
-            int j=i,m=0;
-            while(!k[j])
-            {
-                k[j]=true;
-                j=kk.get(nm.get(j));
-                m++;
-            }
-            if(m>0)
-            {
-                s+=m-1;
+
+        int swaps = 0;
+        for(int i=0; i<list.size(); i++) {
+            while(map.get(list.get(i)) != i) {
+                Collections.swap(list, i, map.get(list.get(i)));
+                swaps++;
             }
         }
-        return s;
+        return swaps;
     }
 }
