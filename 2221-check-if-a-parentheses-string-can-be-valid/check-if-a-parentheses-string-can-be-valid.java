@@ -3,32 +3,27 @@ class Solution {
         int n = s.length();
         if(n % 2 != 0) return false;
 
-        Stack<Integer> open = new Stack<>();
-        Stack<Integer> unlocked = new Stack<>();
-
+        int openBrackets = 0;
         for(int i=0; i<n; i++) {
             char ch = s.charAt(i);
             char lock = locked.charAt(i);
 
-            if(lock == '0') {
-                unlocked.push(i);
-            }
-            else {
-                if(ch == '(') open.push(i);
-                else {
-                    if(!open.isEmpty()) open.pop();
-                    else if(!unlocked.isEmpty()) {
-                        unlocked.pop();
-                    }
-                    else return false;
-                }
-            }
+            if(lock == '0' || ch == '(') openBrackets++;
+            else openBrackets--;
+
+            if(openBrackets < 0) return false;
         }
 
-        while(!open.isEmpty() && !unlocked.isEmpty() && open.peek() < unlocked.peek()) {
-            open.pop();
-            unlocked.pop();
+        int closeBrackets = 0;
+        for(int i=n-1; i>=0; i--) {
+            char ch = s.charAt(i);
+            char lock = locked.charAt(i);
+
+            if(lock == '0' || ch == ')') closeBrackets++;
+            else closeBrackets--;
+
+            if(closeBrackets < 0) return false;
         }
-        return open.isEmpty();
+        return true;
     }
 }
