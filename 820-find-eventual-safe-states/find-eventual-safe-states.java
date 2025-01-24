@@ -2,43 +2,41 @@ class Solution {
     public List<Integer> eventualSafeNodes(int[][] graph) {
         int V = graph.length;
         List<List<Integer>> adj = new ArrayList<>();
-
-        for(int i=0; i<V; i++) {
+        for (int i = 0; i < V; i++) {
             adj.add(new ArrayList<>());
-            for(int v: graph[i]) {
-                adj.get(i).add(v);
-            }
         }
 
-        boolean[] visited = new boolean[V];
-        boolean[] inRecursion = new boolean[V];
+        int[] indegree = new int[V];
+        for(int i=0; i<V; i++) {
+            for(int v: graph[i]) {
+                adj.get(v).add(i);
+                indegree[i]++;
+            }
+        }
+         
+        Queue<Integer> queue = new LinkedList<>();
 
         for(int i=0; i<V; i++) {
-            if(!visited[i]) {
-                isCycleDFS(adj, i, visited, inRecursion);
+            if(indegree[i] == 0) {
+                queue.offer(i);
             }
         }
 
         List<Integer> safeNodes = new ArrayList<>();
-        for(int i=0; i<V; i++) {
-            if(!inRecursion[i]) {
-                safeNodes.add(i);
+        while(!queue.isEmpty()) {
+            int u = queue.poll();
+            safeNodes.add(u);
+
+            for(int v: adj.get(u)) {
+                indegree[v]--;
+
+                if(indegree[v] == 0) {
+                    queue.offer(v);
+                }
             }
         }
+
+        Collections.sort(safeNodes);
         return safeNodes;
     }
-
-    public boolean isCycleDFS(List<List<Integer>> adj, int u, boolean[] visited, boolean[] inRecursion) {
-        visited[u] = true;
-        inRecursion[u] = true;
-
-        for(int v: adj.get(u)) {
-            if(!visited[v] && isCycleDFS(adj, v, visited, inRecursion)) {
-                return true;
-            }
-            else if(inRecursion[v]) return true;
-        }
-        inRecursion[u] = false;
-        return false;
-    } 
 }
