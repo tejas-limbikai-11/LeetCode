@@ -7,19 +7,17 @@ class Solution {
         System.arraycopy(colors, 0, extended, n, k - 1);
 
         int result = 0;
-        int i=0, j=1;
+        int length = 1;
+        int prevColor = colors[0];
 
-        while(j < n + k - 1) {
-            if(extended[j] == extended[j-1]) {
-                i = j;
-                j++;
-                continue;
+        for(int j=1; j < n + k - 1; j++) {
+            if(colors[j % n] != prevColor) {
+                length++;
+                prevColor = colors[j % n];
             }
-            if(j - i + 1 == k) {
-                result++;
-                i++;
-            }
-            j++;
+            else length = 1;
+
+            if(length >= k) result++;
         }
         
         return result;
