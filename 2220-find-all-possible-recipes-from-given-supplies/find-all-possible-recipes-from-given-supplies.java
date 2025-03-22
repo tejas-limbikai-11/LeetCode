@@ -1,29 +1,29 @@
 class Solution {
     public List<String> findAllRecipes(String[] recipes, List<List<String>> ingredients, String[] supplies) {
-        Set<String> seen = new HashSet<>();
-        for (String sup : supplies) {
-            seen.add(sup);
-        }
-        Queue<Integer> q = new LinkedList<>();
-        for (int i = 0; i < recipes.length; ++i) {
-            q.offer(i);
-        }
-        List<String> ans = new ArrayList<>();
-        int prevSize = seen.size() - 1;
-        while (seen.size() > prevSize) {
-            prevSize = seen.size();
-            mid: for (int sz = q.size(); sz > 0; --sz) {
-                int i = q.poll();
-                for (String ing : ingredients.get(i)) {
-                    if (!seen.contains(ing)) {
-                        q.offer(i);
-                        continue mid;
+        int n = recipes.length;
+        Set<String> set = new HashSet<>(Arrays.asList(supplies));
+        List<String> result = new ArrayList<>();
+        boolean[] cooked = new boolean[n];
+        int count = n;
+
+        while (count-- > 0) {
+            for (int i = 0; i < n; i++) {
+                if (cooked[i]) continue;
+
+                boolean canMake = true;
+                for (String str : ingredients.get(i)) {
+                    if (!set.contains(str)) {
+                        canMake = false;
+                        break;
                     }
                 }
-                seen.add(recipes[i]);
-                ans.add(recipes[i]);
+                if (canMake) {
+                    result.add(recipes[i]);
+                    set.add(recipes[i]);
+                    cooked[i] = true;
+                }
             }
         }
-        return ans;
+        return result;
     }
 }
