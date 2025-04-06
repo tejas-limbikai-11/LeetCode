@@ -2,38 +2,35 @@ class Solution {
     public List<Integer> largestDivisibleSubset(int[] nums) {
         int n = nums.length;
         Arrays.sort(nums);
-
         int[] dp = new int[n];
-        Arrays.fill(dp, 1);
-        int[] hash = new int[n];
+        Arrays.fill(dp , 1);
+        int[] prevIdx = new int[n];
+        Arrays.fill(prevIdx , -1);
         int maxLDS = 1;
         int lastIdx = 0;
-        
-        for(int idx = 0; idx < n; idx++) {
-            hash[idx] = idx;
 
-            for(int prevIdx = 0; prevIdx < idx; prevIdx++) {
-                if(nums[idx] % nums[prevIdx] == 0 && 1 + dp[prevIdx] > dp[idx]) {
-                    dp[idx] = 1 + dp[prevIdx];
-                    hash[idx] = prevIdx;
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<i; j++) {
+                if(nums[i] % nums[j] == 0) {
+                    if(dp[i] < dp[j] + 1) {
+                        dp[i] = dp[j] + 1;
+                        prevIdx[i] = j;
+                    }
+
+                    if(dp[i] > maxLDS) {
+                        maxLDS = dp[i];
+                        lastIdx = i;
+                    }
                 }
             }
-
-            if(dp[idx] > maxLDS) {
-                maxLDS = dp[idx];
-                lastIdx = idx;
-            }
         }
 
-        List<Integer> list = new ArrayList<>();
-        list.add(nums[lastIdx]);
+        List<Integer> result = new ArrayList<>();
 
-        while(hash[lastIdx] != lastIdx) {
-            lastIdx = hash[lastIdx];
-            list.add(nums[lastIdx]);
+        while(lastIdx != -1) {
+            result.add(nums[lastIdx]);
+            lastIdx = prevIdx[lastIdx];
         }
-
-        Collections.reverse(list);
-        return list;
+        return result;
     }
 }
