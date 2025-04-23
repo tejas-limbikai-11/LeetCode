@@ -1,20 +1,22 @@
 class Solution {
     public int countLargestGroup(int n) {
-        int result = 0;
-        Map<Integer, Integer> map = new HashMap<>();
-        int maxFreq = 0;
-        
+        int count = 0;
+        int sums[] = new int[37];
+        int maxI = 0;
+
         for(int i=1; i<=n; i++) {
-            int sum = sumOfDigits(i);
-            map.put(sum, map.getOrDefault(sum, 0) + 1);
-            maxFreq = Math.max(maxFreq, map.get(sum));
+            sums[sumOfDigits(i)]++;
         }
 
-        for(int key: map.keySet()) {
-            if(map.get(key) == maxFreq) result++;
+        for(int i: sums) {
+            if(i > maxI) {
+                maxI = i;
+                count = 1;
+            }
+            else if(i == maxI) count++;
         }
 
-        return result;
+        return count;
     }
 
     public int sumOfDigits(int num) {
