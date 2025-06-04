@@ -3,16 +3,32 @@ class Solution {
         int n = word.length();
         if(numFriends == 1) return word;
 
-        int longestPossible = n - (numFriends - 1);
-        String result = "";
+        int i = bestStartingPoint(word, n);
 
-        for(int i=0; i<n; i++) {
-            int canTakeLength = Math.min(longestPossible, n - i);
-            String subStr = word.substring(i, i + canTakeLength);
-            if(subStr.compareTo(result) > 0) {
-                result = subStr;
+        int longestPossible = n - (numFriends - 1);
+        int canTakeLength = Math.min(longestPossible, n - i);
+
+        return word.substring(i, i + canTakeLength);
+    }
+
+    public int bestStartingPoint(String word, int n) {
+        int i = 0;
+        int j = 1;
+
+        while(j < n) {
+            int k = 0;
+
+            while(j + k < n && word.charAt(i + k) == word.charAt(j + k)) {
+                k++;
             }
+
+            if(j + k < n && word.charAt(j + k) > word.charAt(i + k)) {
+                i = j;
+                j = j + 1;
+            }
+            else j = j + k + 1;
         }
-        return result;
+
+        return i;
     }
 }
