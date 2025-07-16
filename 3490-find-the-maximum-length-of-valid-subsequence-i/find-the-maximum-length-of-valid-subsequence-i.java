@@ -1,22 +1,22 @@
 class Solution {
     public int maximumLength(int[] nums) {
         int result = 0;
-        int eveneven = 0;
-        int oddodd = 0;
-        int oddeven = 1;
+        int even = 0;
+        int odd = 0;
+        int alternating = 1;
         int prev = -1;
 
         for(int num: nums) {
-            if(num % 2 == 0) eveneven++;
-            else oddodd++;
+            if(num % 2 == 0) even++;
+            else odd++;
 
             if(prev != -1 && num % 2 != prev % 2) {
-                oddeven++;
+                alternating++;
             }
             prev = num;
         }
 
-        return Math.max(eveneven, Math.max(oddodd, oddeven));
+        return Math.max(even, Math.max(odd, alternating));
 
     }
 }
