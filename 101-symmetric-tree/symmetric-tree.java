@@ -21,10 +21,11 @@ class Solution {
     public boolean areMirror(TreeNode a, TreeNode b) {
         if(a == null && b == null) return true;
         else if(a == null || b == null || a.val != b.val) return false;
-        
+
         if(!areMirror(a.left, b.right)) return false;
         if(!areMirror(a.right, b.left)) return false;
-        
+
         return true;
     }
+
 }
